@@ -38,6 +38,21 @@ function addText(slide, text, opts) {
   });
 }
 
+function addLinkText(slide, label, url, opts) {
+  slide.addText(label, {
+    margin: 0,
+    breakLine: false,
+    valign: "mid",
+    fontFace: fonts.body,
+    fontSize: 10.5,
+    color: colors.coral,
+    bold: false,
+    hyperlink: { url },
+    underline: { color: colors.coral },
+    ...opts,
+  });
+}
+
 function addFitTitle(slide, text, box, maxFont = sizes.h2, minFont = 24) {
   const fit = autoFontSize(text, fonts.heading, {
     x: box.x,
@@ -227,93 +242,160 @@ function buildSlide1(pptx) {
   const slide = addSlideBase(
     pptx,
     "BLOCK 2.1 / WHAT MAKES IT NETWORKED",
-    "Не смешиваем task, context и behavior",
-    "Сначала отделяем тип механики от эффекта присутствия и поздних moat-слоев."
+    "Что делает продукт сетевым",
+    null
   );
 
-  addSectionLabel(slide, 0.84, 2.28, "НЕ network effect");
-  addSectionLabel(slide, 7.05, 2.28, "3 слоя для анализа");
-
-  const leftX = 0.84;
-  const rightX = 7.05;
-  const topY = 2.56;
-  const cardWLeft = 2.78;
-  const cardWRight = 1.74;
-  const cardH = 1.12;
-  const gap = 0.22;
-
-  [
-    ["Marketing", ["Покупает трафик", "но не увеличивает ценность"]],
-    ["Scale", ["Дает эффективность", "но не делает продукт сетевым"]],
-    ["Lock-in", ["Удерживает выход", "но не создает новую ценность"]],
-    ["Habit", ["Возвращает юзера", "но может жить и без сети"]],
-  ].forEach((item, idx) => {
-    const row = Math.floor(idx / 2);
-    const col = idx % 2;
-    addCard(
-      slide,
-      leftX + col * (cardWLeft + gap),
-      topY + row * (cardH + gap),
-      cardWLeft,
-      cardH,
-      item[0],
-      item[1],
-      { titleColor: colors.primary, fontSize: 11.5 }
-    );
+  addText(slide, "Network effect ≠ виральность ≠ масштаб ≠ привычка.", {
+    x: 0.84,
+    y: 1.9,
+    w: 6.2,
+    h: 0.22,
+    fontSize: 14,
+    color: colors.secondary,
   });
 
-  [
-    [
-      "Intent",
-      [
-        { type: "text", text: "Задача требует второго участника.", fontSize: 10.8 },
-        { type: "text", text: "P2P, split, shared goal.", fontSize: 10.8, color: colors.primary, bold: true },
-      ],
-    ],
-    [
-      "Context",
-      [
-        { type: "text", text: "Один создает контекст для другого.", fontSize: 10.5 },
-        { type: "text", text: "Чек, request, view, rule.", fontSize: 10.5, color: colors.primary, bold: true },
-      ],
-    ],
-    [
-      "Behavior",
-      [
-        { type: "text", text: "Нужные люди уже внутри.", fontSize: 10.8 },
-        { type: "text", text: "Сценарий стал нормой.", fontSize: 10.8, color: colors.primary, bold: true },
-      ],
-    ],
-  ].forEach((item, idx) => {
-    addCard(
-      slide,
-      rightX + idx * (cardWRight + 0.18),
-      topY,
-      cardWRight,
-      1.68,
-      item[0],
-      item[1],
-      { titleColor: colors.coral, titleSize: 16 }
-    );
+  slide.addShape(shapeTypes.roundRect, {
+    x: 0.84,
+    y: 2.3,
+    w: 11.65,
+    h: 0.86,
+    rectRadius: stylePreset.shape.card_radius,
+    fill: { color: colors.surfaceSoft },
+    line: { color: colors.coral, pt: 1.2 },
   });
+
+  addText(
+    slide,
+    "Network effect (NE) отвечает на вопрос: растет ли ценность продукта для пользователя из-за активности, наличия или вклада других пользователей?",
+    {
+      x: 1.08,
+      y: 2.43,
+      w: 11.15,
+      h: 0.34,
+      fontFace: fonts.heading,
+      fontSize: 16.2,
+      bold: true,
+      color: colors.primary,
+      align: "left",
+    }
+  );
+
+  const cardY = 3.34;
+  const cardW = 5.68;
+  const cardH = 1.56;
 
   addCard(
     slide,
-    rightX,
-    4.52,
-    5.44,
-    1.38,
-    "Later-stage amplifiers",
+    0.84,
+    cardY,
+    cardW,
+    cardH,
+    "Прямой эффект",
     [
-      { type: "text", text: "Data effect чаще усиливает банк, а не user-facing network value.", fontSize: 11.2 },
-      { type: "text", text: "Platform / standard effect обычно приходит после масштаба и дистрибуции.", fontSize: 11.2 },
+      {
+        type: "text",
+        text: "Другие участники нужны, чтобы задача работала или решалась лучше.",
+        fontSize: 11.9,
+        color: colors.primary,
+        bold: true,
+        h: 0.44,
+        step: 0.5,
+      },
+      {
+        type: "text",
+        text: "Примеры: P2P-перевод, split bill, shared goal.",
+        fontSize: 11.2,
+        color: colors.secondary,
+      },
     ],
-    { fill: colors.surfaceSoft, titleColor: colors.primary }
+    { titleColor: colors.primary, titleSize: 18 }
   );
 
-  addTakeaway(
+  addCard(
     slide,
-    "Для Salmon стартовая ставка: intent-driven + context-driven в малой доверенной группе; behavioral pull должен появиться позже."
+    6.81,
+    cardY,
+    cardW,
+    cardH,
+    "Непрямой эффект",
+    [
+      {
+        type: "text",
+        text: "Одни участники создают контекст или supply, который ценен для других.",
+        fontSize: 11.8,
+        color: colors.primary,
+        bold: true,
+        h: 0.44,
+        step: 0.5,
+      },
+      {
+        type: "text",
+        text: "Примеры: sellers → buyers, drivers → riders, creators → consumers.",
+        fontSize: 11.2,
+        color: colors.secondary,
+        h: 0.34,
+      },
+    ],
+    { titleColor: colors.primary, titleSize: 18 }
+  );
+
+  addText(slide, "Тест на NE", {
+    x: 0.84,
+    y: 5.34,
+    w: 1.1,
+    h: 0.2,
+    fontFace: fonts.heading,
+    fontSize: 11,
+    bold: true,
+    color: colors.coral,
+  });
+  addBulletLine(slide, 2.08, 5.28, 9.8, "Если убрать часть пользователей, продукт становится слабее.", {
+    fontSize: 11.4,
+    height: 0.24,
+  });
+  addBulletLine(slide, 2.08, 5.62, 9.8, "Если рост держится только на маркетинге, это не NE.", {
+    fontSize: 11.4,
+    height: 0.24,
+  });
+
+  addText(slide, "Источники", {
+    x: 0.84,
+    y: 6.38,
+    w: 1.05,
+    h: 0.2,
+    fontFace: fonts.heading,
+    fontSize: 11,
+    bold: true,
+    color: colors.coral,
+  });
+  addLinkText(slide, "NFX Manual", "https://www.nfx.com/post/network-effects-manual/", {
+    x: 2.05,
+    y: 6.34,
+    w: 1.75,
+    h: 0.2,
+  });
+  addLinkText(
+    slide,
+    "Andrew Chen",
+    "https://andrewchen.com/chapter-one-cold-start/",
+    {
+      x: 4.04,
+      y: 6.34,
+      w: 1.75,
+      h: 0.2,
+    }
+  );
+  addLinkText(
+    slide,
+    "Rochet & Tirole (2003)",
+    "https://academic.oup.com/jeea/article/1/4/990/2280902",
+    {
+      x: 6.1,
+      y: 6.34,
+      w: 3.05,
+      h: 0.2,
+    }
   );
 
   finalizeSlide(slide, pptx);
@@ -717,11 +799,6 @@ function buildSlide6(pptx) {
 }
 
 async function build() {
-  const outDir = path.join(__dirname, "out", "block2");
-  const singleDir = path.join(outDir, "single");
-  fs.mkdirSync(outDir, { recursive: true });
-  fs.mkdirSync(singleDir, { recursive: true });
-
   function makeDeck(title) {
     const deck = new PptxGenJS();
     shapeTypes = deck.ShapeType;
@@ -748,20 +825,60 @@ async function build() {
     ["06_architecture", buildSlide6],
   ];
 
-  const pptx = makeDeck("Salmon Network Effects - Block 2");
-  builders.forEach(([, buildSlide]) => buildSlide(pptx));
+  const builderMap = new Map(builders);
+  const aliases = {
+    "01": "01_what_makes_it_networked",
+    "2.1": "01_what_makes_it_networked",
+    "b2.1": "01_what_makes_it_networked",
+  };
 
-  const outPath = path.join(outDir, "salmon_block2_network_effects.pptx");
-  await pptx.writeFile({ fileName: outPath });
-  console.log(`Created: ${outPath}`);
+  const args = process.argv.slice(2);
+  const exportAll = args.includes("--all");
+  const slideIdx = args.indexOf("--slide");
+  const outIdx = args.indexOf("--out");
 
-  for (const [fileStem, buildSlide] of builders) {
-    const singleDeck = makeDeck(`Salmon Block 2 - ${fileStem}`);
-    buildSlide(singleDeck);
-    const singlePath = path.join(singleDir, `${fileStem}.pptx`);
-    await singleDeck.writeFile({ fileName: singlePath });
-    console.log(`Created: ${singlePath}`);
+  if (exportAll) {
+    const outDir = path.resolve(__dirname, "..", "..", "presentation", "block2");
+    const singleDir = path.join(outDir, "slides");
+    fs.mkdirSync(outDir, { recursive: true });
+    fs.mkdirSync(singleDir, { recursive: true });
+
+    const pptx = makeDeck("Salmon Network Effects - Block 2");
+    builders.forEach(([, buildSlide]) => buildSlide(pptx));
+
+    const outPath = path.join(outDir, "salmon_block2_network_effects.pptx");
+    await pptx.writeFile({ fileName: outPath });
+    console.log(`Created: ${outPath}`);
+
+    for (const [fileStem, buildSlide] of builders) {
+      const singleDeck = makeDeck(`Salmon Block 2 - ${fileStem}`);
+      buildSlide(singleDeck);
+      const singlePath = path.join(singleDir, `${fileStem}.pptx`);
+      await singleDeck.writeFile({ fileName: singlePath });
+      console.log(`Created: ${singlePath}`);
+    }
+    return;
   }
+
+  const rawSlideKey = slideIdx >= 0 ? args[slideIdx + 1] : "01_what_makes_it_networked";
+  const slideKey = aliases[rawSlideKey] ?? rawSlideKey;
+  const slideBuilder = builderMap.get(slideKey);
+
+  if (!slideBuilder) {
+    throw new Error(`Unknown slide key: ${rawSlideKey}`);
+  }
+
+  const outPath =
+    outIdx >= 0
+      ? path.resolve(args[outIdx + 1])
+      : path.resolve(__dirname, "..", "..", "presentation", `${slideKey}.pptx`);
+
+  fs.mkdirSync(path.dirname(outPath), { recursive: true });
+
+  const deck = makeDeck(`Salmon Slide - ${slideKey}`);
+  slideBuilder(deck);
+  await deck.writeFile({ fileName: outPath });
+  console.log(`Created: ${outPath}`);
 }
 
 build().catch((err) => {
