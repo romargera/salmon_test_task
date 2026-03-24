@@ -319,6 +319,11 @@ function renderMarkdownFragment(md) {
   return normalizeRenderedHtml(parsed);
 }
 
+function renderInlineMarkdown(text) {
+  const html = renderMarkdownFragment(text).trim();
+  return html.replace(/^<p>/, '').replace(/<\/p>$/, '');
+}
+
 function createCustomTile(heading, bodyMarkdown, extraClass = '') {
   const tile = document.createElement('article');
   tile.className = `tile content-block ${extraClass}`.trim();
@@ -334,6 +339,64 @@ function createCustomTile(heading, bodyMarkdown, extraClass = '') {
   tile.appendChild(body);
   applySingleItemBulletRule(tile);
   return tile;
+}
+
+function parseFirstMarkdownTable(contentMarkdown) {
+  const lines = contentMarkdown.split('\n');
+  let start = -1;
+  let end = -1;
+
+  for (let i = 0; i < lines.length - 1; i += 1) {
+    const row = lines[i].trim();
+    const separator = lines[i + 1].trim();
+    if (!row.startsWith('|') || !separator.startsWith('|')) {
+      continue;
+    }
+    if (!/\|\s*:?-{3,}:?\s*\|/.test(separator)) {
+      continue;
+    }
+    start = i;
+    end = i + 1;
+    break;
+  }
+
+  if (start < 0) {
+    return null;
+  }
+
+  for (let i = end + 1; i < lines.length; i += 1) {
+    const line = lines[i].trim();
+    if (!line.startsWith('|')) {
+      end = i - 1;
+      break;
+    }
+    end = i;
+  }
+
+  const tableLines = lines.slice(start, end + 1).map((line) => line.trim());
+  if (tableLines.length < 3) {
+    return null;
+  }
+
+  const parseRow = (line) => {
+    return line
+      .replace(/^\|/, '')
+      .replace(/\|$/, '')
+      .split('|')
+      .map((cell) => cell.trim());
+  };
+
+  const headers = parseRow(tableLines[0]);
+  const rows = tableLines.slice(2).map(parseRow);
+
+  return { headers, rows };
+}
+
+function extractBacktickBlockAfterHeading(contentMarkdown, headingText) {
+  const escaped = headingText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const pattern = new RegExp(`\`${escaped}\`\\s*\\n\`([^\`]+)\``);
+  const match = contentMarkdown.match(pattern);
+  return match ? match[1].trim() : '';
 }
 
 function buildExecutiveSummaryCustom(slide) {
@@ -360,13 +423,13 @@ function buildExecutiveSummaryCustom(slide) {
 
   const howTile = createCustomTile(
     'HOW',
-    '- Сначала проверяем боль и качество решения задачи.\n- Затем — привлечение новых активированных пользователей и повторяемость.\n- После этого — перенос в новые графы и банковую экономику.',
+    '1. Проверяем боль и качество решения задачи.\n2. Проверяем привлечение новых активированных пользователей и повторяемость.\n3. Проверяем перенос в новые графы и банковскую экономику.',
     'exec-how'
   );
 
   const whyTile = createCustomTile(
     'WHY',
-    '- **Боль реальна:** [75%](https://www.lendingtree.com/credit-cards/study/friends-money-report/) говорят, что деньги вредили дружбе; [32%](https://www.lendingtree.com/credit-cards/study/friends-money-report/) не получили деньги назад. US-данные валидируют силу боли, а PH-данные — поведение и реализуемость сценария [A].\n- **Сетевой эффект здесь работает:** новый релевантный участник помогает другим участникам Space решить задачу; повтор в том же Space углубляет ценность, перенос в другую группу расширяет сеть.\n- **Масштаб материален:** SOM 4.2M пользователей к 3-му году; это около 17% цели Salmon в 25M активных пользователей [1](#appendix-q-tam--sam--som), [2](' +
+    '- **Боль реальна [A]:** [75%](https://www.lendingtree.com/credit-cards/study/friends-money-report/) говорят, что деньги вредили дружбе; [32%](https://www.lendingtree.com/credit-cards/study/friends-money-report/) не получили деньги назад. Прим. Нужно валидировать на PH.\n- **Сетевой эффект здесь работает:** новый релевантный участник помогает другим участникам Space решить задачу; повтор в том же Space углубляет ценность, перенос в другую группу расширяет сеть.\n- **Масштаб материален:** SOM 4.2M [A] пользователей к 3-му году; это около 17% цели Salmon в 25M активных пользователей [1](#appendix-q-tam--sam--som), [2](' +
       SOM_SOURCE_URL +
       ').',
     'exec-why'
@@ -380,7 +443,7 @@ function buildExecutiveSummaryCustom(slide) {
 
   const tradeOffTile = createCustomTile(
     'TRADE-OFF',
-    'Среди друзей, пар / партнеров, семей с детьми и небольших групп коллег я выбираю друзей: у них сильнее перенос в новые графы и сетевой эффект, хотя пары и семьи могут выглядеть сильнее по частоте и немедленной монетизации, а коллеги — по утилитарности сценария.',
+    'Среди топ NE сегментов "друзья", "пары / партнеры", "дети в семьях" и "небольших групп коллег" я выбираю друзей: у них сильнее перенос в новые графы и сетевой эффект.',
     'exec-trade'
   );
 
@@ -414,7 +477,7 @@ function buildWhyBetCustom(slide) {
     accentHeading.textContent = 'SUMMARY';
     const accentText = document.createElement('p');
     accentText.className = 'accent-text';
-    accentText.textContent = normalizeAccent(slide.accent);
+    accentText.innerHTML = renderInlineMarkdown(normalizeAccent(slide.accent));
     accentBody.append(accentHeading, accentText);
     accentTile.appendChild(accentBody);
     shell.appendChild(accentTile);
@@ -425,32 +488,137 @@ function buildWhyBetCustom(slide) {
 
   const t1 = createCustomTile(
     'БОЛЬ',
-    'Один платит за всех, дальше начинаются чат, напоминания, ручная математика и переводы в разных приложениях.\n\n[75%](https://www.lendingtree.com/credit-cards/study/friends-money-report/) респондентов сообщают, что деньги вредили дружбе; [32%](https://www.lendingtree.com/credit-cards/study/friends-money-report/) так и не получили деньги назад. US-данные валидируют силу боли, а PH-данные — поведение и реализуемость сценария [A].',
+    '- Один платит за всех, дальше начинаются чаты, напоминания, ручная математика, неловкие напоминания и переводы в разных приложениях.\n- [75%](https://www.lendingtree.com/credit-cards/study/friends-money-report/) говорят, что деньги вредили дружбе; [32%](https://www.lendingtree.com/credit-cards/study/friends-money-report/) не получили деньги назад. Нужно валидировать на PH.',
     'bet-1'
   );
 
   const t2 = createCustomTile(
     'СЕТЕВОЙ ЭФФЕКТ',
-    'Это локальный прямой эффект: каждый новый участник Space делает общий расход точнее, видимее и ближе к закрытому расчету.\n\nОдин человек обычно состоит сразу в [нескольких компаниях друзей](#appendix-i-segment-deep-dive), поэтому паттерн переносится дальше.',
+    '* Каждый новый участник Space приближает группу ближе к закрытому расчету или достигнутой финансовой цели.\n* Каждый новый участник может создавать новые контексты в существующем Space или создавать новые Spaces и приглашать новых пользователей.',
     'bet-2'
   );
 
   const t3 = createCustomTile(
     'ЭКОНОМИКА',
-    'Контекстное приглашение может быть дешевле платного канала, а цепочка ценности выглядит так: Space -> новый активированный пользователь -> доходное банковое действие -> вклад когорты в экономику [A].\n\nВпервые фиксирую расчетный возрастной фокус 20-39: в этой рамке SOM 4.2M пользователей к 3-му году; это около 17% цели Salmon в 25M активных пользователей [1](#appendix-q-tam--sam--som), [2](' +
-      SOM_SOURCE_URL +
-      '), [3](#appendix-p-full-metrics-table), [A].',
+    'Цепочка ценности: Space -> новый активированный пользователь -> доходное банковое действие -> вклад когорты в банковскую экономику.',
     'bet-3'
   );
 
   const t4 = createCustomTile(
     'ПИЛОТ',
-    'Достаточно 15-20 реальных групп и 30 дней, чтобы проверить боль, первый закрытый расчет, повтор и перенос в новые графы [3](#appendix-o-first-30-days), [A].\n\nУ сценария есть короткие go / no-go пороги, а не многомесячный горизонт неопределенности.',
+    '[A] В первый месяц верифицируем боль и снимаем качественные usability-сигналы с прототипом. В четвертый месяц получаем первые количественные данные.',
     'bet-4'
   );
 
   grid.append(t1, t2, t3, t4);
   shell.appendChild(grid);
+  section.appendChild(shell);
+  return section;
+}
+
+function buildAppendixDividerSlide(slide) {
+  const section = document.createElement('section');
+  section.id = slide.id;
+  section.dataset.backgroundColor = '#f5f5f6';
+
+  const shell = document.createElement('div');
+  shell.className = 'slide-shell appendix-divider';
+
+  const title = document.createElement('h2');
+  title.className = 'main-title appendix-divider-title';
+  title.textContent = slide.title;
+  shell.appendChild(title);
+
+  section.appendChild(shell);
+  return section;
+}
+
+function buildWhatScenariosCustom(slide) {
+  const section = document.createElement('section');
+  section.id = slide.id;
+  section.dataset.backgroundColor = '#f5f5f6';
+
+  const shell = document.createElement('div');
+  shell.className = 'slide-shell';
+
+  const title = document.createElement('h2');
+  title.className = 'main-title';
+  title.textContent = slide.title;
+  shell.appendChild(title);
+
+  const table = parseFirstMarkdownTable(slide.contentMarkdown);
+  const creatorHeading = (table?.headers?.[0] || 'Создатель Space').toUpperCase();
+  const participantHeading = (table?.headers?.[1] || 'Участник').toUpperCase();
+  const creatorItems = (table?.rows || [])
+    .map((row) => row[0])
+    .filter(Boolean)
+    .map((item) => `- ${item}`)
+    .join('\n');
+  const participantItems = (table?.rows || [])
+    .map((row) => row[1])
+    .filter(Boolean)
+    .map((item) => `- ${item}`)
+    .join('\n');
+
+  const resultText =
+    extractBacktickBlockAfterHeading(slide.contentMarkdown, 'ОБРАЗ РЕЗУЛЬТАТА') ||
+    'Опыт должен быть короче и удобнее текущего ручного пути: заведение расхода -> доли -> расчет -> выплата.';
+
+  const grid = document.createElement('div');
+  grid.className = 'tiles-grid scenarios-grid';
+
+  const creatorTile = createCustomTile(creatorHeading, creatorItems, 'scenario-creator');
+  const participantTile = createCustomTile(participantHeading, participantItems, 'scenario-participant');
+  const resultTile = createCustomTile('ОБРАЗ РЕЗУЛЬТАТА', resultText, 'scenario-result');
+
+  grid.append(creatorTile, participantTile, resultTile);
+  shell.appendChild(grid);
+
+  section.appendChild(shell);
+  return section;
+}
+
+function buildPhoneRightColumnsCustom(slide) {
+  const section = document.createElement('section');
+  section.id = slide.id;
+  section.dataset.backgroundColor = '#f5f5f6';
+
+  const shell = document.createElement('div');
+  shell.className = 'slide-shell phone-right-shell';
+
+  const columns = document.createElement('div');
+  columns.className = 'why-not-columns';
+
+  const leftCol = document.createElement('div');
+  leftCol.className = 'why-not-left-col';
+
+  const title = document.createElement('h2');
+  title.className = 'main-title';
+  title.textContent = slide.title;
+  leftCol.appendChild(title);
+
+  const left = document.createElement('div');
+  left.className = 'tiles-stack why-not-left';
+  const blocks = splitContentBlocks(slide.contentMarkdown);
+  blocks.forEach((blockMarkdown) => {
+    left.appendChild(renderMarkdownBlock(blockMarkdown));
+  });
+  leftCol.appendChild(left);
+
+  const right = document.createElement('aside');
+  right.className = 'why-not-phone-slot';
+  const phoneFrame = document.createElement('div');
+  phoneFrame.className = 'why-not-phone-frame';
+  const phoneImage = document.createElement('img');
+  phoneImage.className = 'why-not-phone-image';
+  phoneImage.src = '/image.png';
+  phoneImage.alt = 'Slide screenshot';
+  phoneFrame.appendChild(phoneImage);
+  right.appendChild(phoneFrame);
+
+  columns.append(leftCol, right);
+  shell.appendChild(columns);
+
   section.appendChild(shell);
   return section;
 }
@@ -473,6 +641,18 @@ function buildSlideSection(slide) {
     return buildWhyBetCustom(slide);
   }
 
+  if (slide.id === 'slide-5-what') {
+    return buildWhatScenariosCustom(slide);
+  }
+
+  if (slide.id === 'slide-4-what-salmon-space') {
+    return buildPhoneRightColumnsCustom(slide);
+  }
+
+  if (slide.id === 'appendix') {
+    return buildAppendixDividerSlide(slide);
+  }
+
   const section = document.createElement('section');
   section.id = slide.id;
   section.dataset.backgroundColor = '#f5f5f6';
@@ -490,7 +670,7 @@ function buildSlideSection(slide) {
     accentTile.className = 'tile tile-accent';
     const accentText = document.createElement('p');
     accentText.className = 'accent-text';
-    accentText.textContent = normalizeAccent(slide.accent);
+    accentText.innerHTML = renderInlineMarkdown(normalizeAccent(slide.accent));
     accentTile.appendChild(accentText);
     shell.appendChild(accentTile);
   }
@@ -532,6 +712,70 @@ function splitSlides(markdown) {
     .filter(Boolean);
 }
 
+function applyColumnWidthsFromSource(sourceTable, targetTable) {
+  const sourceHeaderRow = sourceTable.querySelector('thead tr') || sourceTable.querySelector('tr');
+  if (!sourceHeaderRow) {
+    return;
+  }
+
+  const sourceCells = [...sourceHeaderRow.children].filter((cell) => {
+    return cell.tagName === 'TH' || cell.tagName === 'TD';
+  });
+
+  if (!sourceCells.length) {
+    return;
+  }
+
+  const tableWidth = sourceTable.getBoundingClientRect().width || sourceTable.offsetWidth;
+  if (!tableWidth) {
+    return;
+  }
+
+  const widths = sourceCells.map((cell) => {
+    return (cell.getBoundingClientRect().width / tableWidth) * 100;
+  });
+
+  if (widths.length >= 3) {
+    const equalWidth = (widths[1] + widths[2]) / 2;
+    widths[1] = equalWidth;
+    widths[2] = equalWidth;
+  }
+
+  const setColgroup = (table) => {
+    const oldColgroup = table.querySelector('colgroup');
+    if (oldColgroup) {
+      oldColgroup.remove();
+    }
+
+    const colgroup = document.createElement('colgroup');
+    widths.forEach((width) => {
+      const col = document.createElement('col');
+      col.style.width = `${width.toFixed(3)}%`;
+      colgroup.appendChild(col);
+    });
+
+    table.prepend(colgroup);
+    table.style.tableLayout = 'fixed';
+  };
+
+  setColgroup(sourceTable);
+  setColgroup(targetTable);
+}
+
+function syncWhyNotAlternativesTableColumns() {
+  const slide = document.getElementById('slide-3-why-not-alternatives');
+  if (!slide) {
+    return;
+  }
+
+  const tables = slide.querySelectorAll('.content-block table');
+  if (tables.length < 2) {
+    return;
+  }
+
+  applyColumnWidthsFromSource(tables[0], tables[1]);
+}
+
 async function renderDeck() {
   const loading = document.getElementById('loading');
   const slidesRoot = document.querySelector('.reveal .slides');
@@ -564,6 +808,8 @@ async function renderDeck() {
     });
 
     await deck.initialize();
+    // Keep the second table on slide 3 aligned with the first one.
+    requestAnimationFrame(syncWhyNotAlternativesTableColumns);
     loading.classList.add('hidden');
   } catch (err) {
     loading.textContent = `Ошибка сборки слайдов: ${err.message}`;
