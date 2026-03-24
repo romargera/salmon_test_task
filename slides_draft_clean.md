@@ -1,13 +1,5 @@
 ## Слайд 1. Executive Summary
 
-Основа: `solution_structure_final.md` + текущая логика `2.x–7.1`.
-
-Цель:
-Сразу зафиксировать для C-level главную ставку, стартовый сегмент, продуктовую концепцию и логику проверки без прохождения через весь narrative.
-
-Заголовок:
-`Executive Summary`
-
 Контент:
 
 Акцентная строка:
@@ -28,33 +20,9 @@
   - Проверяем привлечение новых активированных пользователей Salmon и закрепляется ли привычка.
   - Проверяем перенос в новые графы и банковую экономику.
 
-Переход к основной истории:
-`Дальше — почему именно такой тип network effect, почему стартуем с друзей и как устроен сам Salmon Space.`
-
-Источники:
-
-- [solution_structure_final.md](/Users/roman/Documents/Pet Projects/Salmon test task/solution_structure_final.md)
-- [slides_draft.md](/Users/roman/Documents/Pet Projects/Salmon test task/slides_draft.md)
-
-Указания для верстки:
-
-- Основная композиция: `1` акцентная строка сверху и ниже `3` компактных блока `WHAT / WHY / HOW`.
-- Это не agenda slide: на слайде должен быть уже ответ, а не план рассказа.
-- `WHY` должен состоять из `3` аргументов: боль, network effect, бизнес эффект.
-- При верстке добавить гиперссылки из `WHY` на подробные слайды: боль -> сегментный блок, network effect -> `4.3`, бизнес эффект -> блок с `TAM / SAM / SOM` и `Bottom Up`, когда он появится.
-- `HOW` сделать визуально ближе к decision framework, а не к длинному roadmap.
-
 ---
 
 ## Слайд 2.1. Что делает продукт сетевым
-
-Основа: `solution_structure_final.md` + `llm_data/ordinary_llm_answers.md` + `llm_data/perplexity_data.md`.
-
-Цель:
-Зафиксировать для C-level жесткий фильтр: network effect - это механизм роста ценности, а не роста дистрибуции.
-
-Заголовок:
-`Что делает продукт сетевым`
 
 Подзаголовок:
 `Network effect ≠ виральность ≠ масштаб ≠ привычка.`
@@ -75,40 +43,9 @@ Definition block:
 - `Если убрать часть пользователей, продукт становится слабее.`
 - `Если рост держится только на маркетинге, это не NE.`
 
-Источники:
-
-- [NFX, The Network Effects Manual](https://www.nfx.com/post/network-effects-manual/) - ссылка уже есть в `llm_data/ordinary_llm_answers.md` (`[R2]`) и в `llm_data/perplexity_data.md`.
-- [Andrew Chen, The Cold Start Problem](https://andrewchen.com/chapter-one-cold-start/) - ссылка уже есть в `llm_data/ordinary_llm_answers.md` (`[R3]`) и в `llm_data/perplexity_data.md`.
-- [Rochet & Tirole, Platform Competition in Two-Sided Markets](https://academic.oup.com/jeea/article/1/4/990/2280902) - ссылка уже есть в `llm_data/ordinary_llm_answers.md` (`[R1]`) и в `llm_data/perplexity_data.md`.
-
-Визуал:
-
-- сверху короткий подзаголовок-рамка `Network effect ≠ виральность ≠ масштаб ≠ привычка`;
-- ниже один definition block с ключевой формулировкой;
-- затем 2 равновесные карточки: `Прямой эффект` и `Непрямой эффект`;
-- ниже компактный блок `Тест на NE` на 2 пункта;
-- внизу мелкий source row с 3 гиперссылками;
-- takeaway на этом слайде не нужен.
-
-Указания для верстки:
-
-- Слайд должен читатьcя как board-level filter, а не как учебник по теории.
-- Definition block - главный смысловой якорь после заголовка.
-- В карточках сначала короткая формула, потом одна строка с примерами.
-- Источники визуально вторичны, но обязаны быть кликабельными в `pptx`.
-- Не использовать таблицу `NE / Not NE`; различие с виральностью и маркетингом уже зафиксировано в подзаголовке и тесте.
-
 ---
 
-## Слайд 2.2. Лучшие кейсы и практические принципы
-
-Основа: `solution_structure_final.md` + `llm_data/perplexity_data.md` + `llm_data/ordinary_llm_answers.md`.
-
-Цель:
-Показать C-level, какие механики network effects реально создают рост и защищенность, а какие дают только утилитарную пользу без настоящего сетевого преимущества.
-
-Заголовок:
-`Какие NE-механики реально работают`
+## Слайд 2.2. Какие NE-механики реально работают
 
 Контент:
 
@@ -141,42 +78,9 @@ Definition block:
 3. `Опираемся на уже существующую группу (граф) или контекст.`
 4. `Видимость и социальная реакция усиливают уже ценный сценарий.`
 
-Источники:
-
-- [Andrew Chen, The Cold Start Problem](https://andrewchen.com/wp-content/uploads/2022/01/ColdStartProb_9780062969743_AS0928_cc20_Final.pdf)
-- [NFX, The Network Effects Manual](https://www.nfx.com/post/network-effects-manual)
-- [Backstrom et al., Group Formation in Large Social Networks](https://snap.stanford.edu/class/cs224w-readings/backstrom06groupformation.pdf)
-- [Zhang & Marbach, "Two is a Crowd"](https://www.cs.toronto.edu/~marbach/PUBL/gamenets_11.pdf)
-- [Ugander et al., Structural Diversity in Social Contagion](https://pmc.ncbi.nlm.nih.gov/articles/PMC3341012/)
-- [Lerman et al., The Majority Illusion in Social Networks](https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0147617)
-- [a16z, The Dynamics of Network Effects](https://a16z.com/the-dynamics-of-network-effects/)
-- [UMBC/CHI, The Curious Case of Social Awareness Streams](https://courses.cs.umbc.edu/graduate/CMSC691/spring22/pdf/3134663.pdf)
-- [CoinLaw, Zelle vs Venmo statistics](https://coinlaw.io/zelle-vs-venmo-statistics/)
-- [NBER, Mobile Money: The Economics of M-PESA](https://www.nber.org/system/files/working_papers/w16721/w16721.pdf)
-- [Georgetown / Science 2016 summary on M-Pesa poverty impact](https://www.georgetown.edu/news/study-use-of-mobile-money-lifts-nearly-200000-kenyans-out-of-poverty/)
-- [Wikipedia, WeChat red envelope](https://en.wikipedia.org/wiki/WeChat_red_envelope)
-- [Reuters, WeChat users send 46 billion digital red packets over Lunar New Year](https://www.reuters.com/article/technology/corrected-wechat-users-send-46-billion-digital-red-packets-over-lunar-new-year-idUSKBN15J0BH/)
-- [Strava Year in Sport Trend Report 2024](https://assets.ctfassets.net/wad4jonn1ykp/1sJg4OiBKFoGYDtw9NV9v4/8c39f8a577db84a32cec43055938124c/Strava_Year_in_Sport_-_The_Trend_Report_-_en-US.pdf)
-- [Franken et al., Kudos make you run! (2023)](https://research.rug.nl/en/publications/kudos-make-you-run-how-runners-influence-each-other-on-the-online/)
-
-Указания для верстки:
-
-- Основная композиция: `4 карточки кейсов` сверху или слева; `4 принципа` отдельным компактным списком справа или снизу.
-- На карточках оставить только: `ключевое взаимодействие`, `механизм NE`, `1 метрику`.
-- Источники вынести в нижнюю строку мелким кеглем; все ссылки должны остаться кликабельными.
-- Не добавлять таблицу `marketing vs NE` на этот слайд: она дублирует логику 2.1 и перегружает страницу.
-
 ---
 
 ## Слайд 2.3. Сильный NE не гарантирует успех
-
-Основа: `test_task.md` + `solution_structure_final.md` + `llm_data/perplexity_data.md` + `llm_data/ordinary_llm_answers.md` + `llm_data/WeChat.md`.
-
-Цель:
-Ответить на вопросы `3` и частично `4` из задания: даже сильный network effect не взлетает сам по себе. Побеждают кейсы, где совпали архитектура продукта, момент рынка и встроенная дистрибуция.
-
-Заголовок:
-`Сильный NE не гарантирует успех`
 
 Подзаголовок:
 `Побеждают не просто "вирусные" продукты, а те, где механизм роста совпал с моментом рынка и каналом дистрибуции.`
@@ -212,37 +116,9 @@ Definition block:
 Что это значит для нашего кейса:
 `Для Salmon нужен не просто social money сценарий, а продукт, где второй участник нужен по логике самого использования.`
 
-Источники:
-
-- [Andrew Chen, The Cold Start Problem](https://andrewchen.com/wp-content/uploads/2022/01/ColdStartProb_9780062969743_AS0928_cc20_Final.pdf)
-- [Wikipedia, WeChat red envelope](https://en.wikipedia.org/wiki/WeChat_red_envelope)
-- [Northwestern Medill, How WeChat redefined rituals in a digital age](https://spiegel.medill.northwestern.edu/wp-content/uploads/sites/2/2021/04/How-WeChat-redefined-rituals-in-a-digital-multiplatform-age-The-Medill-IMC-Spiegel-Research-Center.pdf)
-- [NBER, Mobile Money: The Economics of M-PESA](https://www.nber.org/system/files/working_papers/w16721/w16721.pdf)
-- [GSMA, The Adoption and Impact of M-Pesa](https://www.gsma.com/solutions-and-impact/connectivity-for-good/mobile-for-development/country/kenya/the-adoption-and-impact-of-m-pesa-a-first-look-at-some-new-data/)
-- [UMBC/CHI, The Curious Case of Social Awareness Streams](https://courses.cs.umbc.edu/graduate/CMSC691/spring22/pdf/3134663.pdf)
-- [CoinLaw, Zelle vs Venmo statistics](https://coinlaw.io/zelle-vs-venmo-statistics/)
-- [Zeta official shutdown statement](https://www.askzeta.com)
-- [Startups.RIP, Honeydue](https://startups.rip/company/honeydue)
-- [Y Combinator, Honeydue](https://www.ycombinator.com/companies/honeydue)
-
-Указания для верстки:
-
-- Ниже заголовка сразу `4 кейс-карточки` в сетке `2x2`; в каждой карточке оставить `что это`, `рост`, `вердикт`.
-- Метрики не выносить в карточки; смысл слайда в сравнении причин успеха, а не в объеме цифр.
-- Под карточками отдельный короткий блок `Маркетинг vs NE`, затем `1` takeaway line и source row.
-- Слайд должен отвечать на вопрос `можно ли было не взлететь с тем же продуктом?` без ощущения теоретического эссе.
-
 ---
 
 ## Слайд 2.4. NE в финтехе
-
-Основа: `solution_structure_final.md` + `llm_data/perplexity_data.md` + `llm_data/ordinary_llm_answers.md` + `llm_data/Revolut.md`.
-
-Цель:
-Показать, что в финансах важно различать `накопительный NE`, `ограниченный NE` и `NE на уровне функции`, где функция использует уже существующую сеть, но не создает новую самостоятельную защиту.
-
-Заголовок:
-`NE в финтехе`
 
 Подзаголовок:
 `Важно различать эффект, который накапливается на уровне всей сети, остается внутри группы или живет только на уровне фичи.`
@@ -283,40 +159,9 @@ Definition block:
 Что это значит для нашего кейса:
 `Наше окно - не платежные сети и не совместный счет, а сценарий, где ограниченный групповой эффект можно повторять между многими доверенными группами и со временем превращать в накопительный.`
 
-Источники:
-
-- [Zelle press release: $1T in 2024](https://www.zelle.com/press-releases/zelle-shatters-records-1-trillion-sent-single-year)
-- [CNBC: 151M users and Zelle growth](https://www.cnbc.com/2025/02/12/zelle-payments-top-1-trillion-in-2024.html)
-- [Faster Payments Council: Pix by the Numbers Q1 2025](https://fasterpaymentscouncil.org/userfiles/2080/files/Pix%20by%20the%20Numbers%20Q1%202025.pdf)
-- [Salmon website content synthesis](llm_data/salmon_website_content.md)
-- [Yahoo Finance: Pix share of electronic payments in Brazil](https://finance.yahoo.com/news/brazil-embedded-finance-databook-report-080500418.html)
-- [CGAP: China Digital Payments Revolution](https://www.cgap.org/research/publication/china-digital-payments-revolution)
-- [BIS Paper 117: DNA feedback loop and fintech concentration](https://www.bis.org/publ/bppdf/bispap117.pdf)
-- [NBER: Mobile Money - The Economics of M-PESA](https://www.nber.org/system/files/working_papers/w16721/w16721.pdf)
-- [Georgetown / Science 2016 summary on M-Pesa poverty impact](https://www.georgetown.edu/news/study-use-of-mobile-money-lifts-nearly-200000-kenyans-out-of-poverty/)
-- [Revolut Annual Report 2024](https://www.revolut.com/en-US/annual-report/2024/)
-- [Revolut Help: Joint Accounts](https://help.revolut.com/en-MT/help/profile-and-plan/joint-accounts/how-to-set-up-a-joint-account-with-revolut/)
-- [Tink x Splitwise Pay by Bank](https://tink.com/press/splitwise-tink-partner/)
-
-Указания для верстки:
-
-- Основная композиция: `3 смысловых блока` — `накопительный NE`, `ограниченный NE`, `NE на уровне функции`.
-- В каждом блоке использовать `1-3 компактные карточки`; внутри карточки не дублировать лейблы `что это / почему`, а оставлять только 2 короткие строки смысла и `verdict`.
-- Не добавлять нижнюю плашку с ограничениями: этот слайд должен быть легче и быстрее читаться, чем предыдущая версия.
-- Цветовой код: `накопительный NE` — зеленый, `ограниченный NE` — янтарный, `NE на уровне функции` — серо-синий.
-- Источники оставить в нижней строке мелким кеглем; все ссылки должны быть кликабельными.
-
 ---
 
 ## Слайд 2.5. Выберем направление (bet)
-
-Основа: `test_task.md` + `solution_structure_final.md` + `vision_ideas.md` + `llm_data/perplexity_data.md` + `llm_data/known_cases.md` + `llm_data/salmon_website_content.md`.
-
-Цель:
-Сузить пространство гипотез до `4` стратегических направлений, связать их с типами сетевых эффектов и показать, где находится мой стартовый bet до выбора конкретного сегмента.
-
-Заголовок:
-`Выберем направление (bet)`
 
 Контент:
 
@@ -356,30 +201,9 @@ NE-категория:
 Комментарий по NFX:
 `Проверка через NFX: Move и Store ближе всего к direct / Personal Utility; Spend & Credit — к indirect / Marketplace (2-Sided); Earn & Grow — к Market Networks и Marketplace. Protocol, Physical, Platform и чистый Hub-and-Spoke не являются нашим стартовым ядром.`
 
-Источники:
-
-- [Salmon-test-task.xlsx - directions.tsv](/Users/roman/Documents/Pet Projects/Salmon test task/Salmon-test-task.xlsx - directions.tsv)
-- [theory_nfx.md](/Users/roman/Documents/Pet Projects/Salmon test task/theory_nfx.md)
-- [llm_data/salmon_website_content.md](/Users/roman/Documents/Pet Projects/Salmon test task/llm_data/salmon_website_content.md)
-
-Указания для верстки:
-
-- Основная композиция: `4 карточки` на одном экране и `1` комментарий по NFX внизу.
-- Номер слайда и служебные плашки не нужны.
-- Гипотезы внутри карточек держать короткими; не пытаться уместить полный список.
-- Источники лучше подать как короткий ряд гиперссылок внизу.
-
 ---
 
-## Слайд 3.1. Сравнение 4 стартовых сегментов
-
-Основа: `Salmon-test-task.xlsx - segments (1).tsv` + `test_task.md` + `solution_structure_final.md`.
-
-Цель:
-Сравнить `4` сегмента и выбрать один стартовый. К масштабу и частоте добавить `переносимость графа`.
-
-Заголовок:
-`Какой сегмент берем первым`
+## Слайд 3.1. Какой сегмент берем первым
 
 Подзаголовок:
 `Расчеты: [локальная таблица](/Users/roman/Documents/Pet Projects/Salmon test task/Salmon-test-task.xlsx - segments (1).tsv) / [Google Sheets](https://docs.google.com/spreadsheets/d/1jzzUfvo3hHp4h_i9hOXBEJrKNEJ5Zv2G/edit?gid=1447909165#gid=1447909165&range=N1)`
@@ -428,40 +252,11 @@ NE-категория:
 `31,6 млн` наемных работников; рабочие группы общаются `5` дней в неделю; групповые чаты — рабочая норма.
 
 Вывод:
-`Стартуем с друзей вокруг поездок, ужинов и событий. Пары / партнеры и дети в семьях — следующий слой, небольшие группы коллег — запасной вариант.` 
-
-Источники:
-
-- [Salmon-test-task.xlsx - segments (1).tsv](/Users/roman/Documents/Pet Projects/Salmon test task/Salmon-test-task.xlsx - segments (1).tsv)
-- [PSA: Family Size and Family Head Characteristics](https://rsso01.psa.gov.ph/system/files/attachment-dir/Special%2520Release%2520No.%25202022-045_Family%2520Size%2520and%2520Family%2520Head%2520Characteristics.pdf)
-- [Bankrate couples finances survey](https://www.bankrate.com/f/102997/x/62268aa83c/couples-finances-press-release-2026.pdf)
-- [Meltwater Philippines social media statistics](https://www.meltwater.com/en/blog/social-media-statistics-philippines)
-- [BSP 2024 Report on E-payments Measurement](https://www.bsp.gov.ph/PaymentAndSettlement/2024_Report_on_E-payments_Measurement.pdf)
-- [CPBRD: PH Employment Situation 2024](https://cpbrd.congress.gov.ph/wp-content/uploads/2025/02/FF2024-63-PH-Employment-Situation-2024.pdf)
-
-Примечание:
-
-`Кроме этого списка из 4 сегментов, мы также рассмотрели зависимых членов расширенной семьи, международные семьи / переводы, микробизнес и соседей по жилью. Полные расчеты вынесены в таблицу по ссылке выше.`
-
-Указания для верстки:
-
-- Основная композиция: `4 карточки` и `один короткий вывод`.
-- Визуально выделить блок `Друзья` как основной выбор.
-- Строку со ссылкой на полную таблицу поставить над карточками и сделать кликабельной.
-- Не превращать слайд в TAM-анализ: на этом экране важнее логика выбора, чем полный расчет.
-- Источники оставить в нижней строке мелким кеглем; все ссылки должны быть кликабельными.
+`Стартуем с друзей вокруг поездок, ужинов и событий. Пары / партнеры и дети в семьях — следующий слой, небольшие группы коллег — запасной вариант.`
 
 ---
 
-## Слайд 3.2. Почему именно друзья, а не остальные
-
-Основа: `llm_data/про основные сегменты.md` + `solution_structure_final.md` + `test_task.md`.
-
-Цель:
-После выбора победителя объяснить, почему именно `друзья` — лучший стартовый вход, а остальные сегменты пока откладываются.
-
-Заголовок:
-`Почему начинаем с друзей`
+## Слайд 3.2. Почему начинаем с друзей
 
 Контент:
 
@@ -491,31 +286,9 @@ NE-аргумент:
 Вывод:
 `Друзья дают лучший баланс между реальной болью, естественным поводом пригласить других и переносимостью графа. Остальные сегменты сильны, но лучше подходят как следующий слой или запасной путь.`
 
-Источники:
-
-- [llm_data/про основные сегменты.md](/Users/roman/Documents/Pet Projects/Salmon test task/llm_data/про основные сегменты.md)
-- [Meltwater Philippines social media statistics](https://www.meltwater.com/en/blog/social-media-statistics-philippines)
-- [Bankrate couples finances survey](https://www.bankrate.com/f/102997/x/62268aa83c/couples-finances-press-release-2026.pdf)
-- [BSP 2024 Report on E-payments Measurement](https://www.bsp.gov.ph/PaymentAndSettlement/2024_Report_on_E-payments_Measurement.pdf)
-- [Asian Banking & Finance: digital wage payments](https://asianbankingandfinance.net/cash-management/news/ph-central-bank-pushes-digital-wage-payments)
-
-Указания для верстки:
-
-- Основная композиция: одна большая карточка `Друзья` и `3` коротких блока `Почему не сейчас`.
-- В блоке друзей отдельно выделить строку `ambag / abono / KKB`.
-- Не повторять TAM-логику из `3.1`; здесь важнее боль, workaround и логика NE.
-
 ---
 
-## Слайд 3.3. Почему эта точка входа подходит Salmon
-
-Основа: `llm_data/про основные сегменты.md` + `solution_structure_final.md` + `test_task.md`.
-
-Цель:
-Показать, почему выбранный сегмент — не просто интересный user case, а хорошая стратегическая ставка именно для Salmon. Подробное решение и NE-петля идут уже в разделе `4.x`.
-
-Заголовок:
-`Почему это хорошая ставка для Salmon`
+## Слайд 3.3. Почему это хорошая ставка для Salmon
 
 Контент:
 
@@ -527,35 +300,9 @@ NE-аргумент:
 2. `Strategic fit и потенциал для Salmon`
 `Высокие. Это не split-функция, а пространство группы для расходов, долей и расчетов. Salmon может встроиться поверх текущих счетов и кошельков: участнику группы не нужен счет Salmon в первый день. Если эта точка входа сработает, те же примитивы можно расширять в пары, семьи, коллег и сценарии вокруг торговых партнеров.`
 
-Переход к следующему разделу:
-`Следующий вопрос — как должен выглядеть продукт, чтобы эта точка входа превратилась в реальную привычку и устойчивый network effect.`
-
-Источники:
-
-- [llm_data/про основные сегменты.md](/Users/roman/Documents/Pet Projects/Salmon test task/llm_data/про основные сегменты.md)
-- [Meltwater Philippines social media statistics](https://www.meltwater.com/en/blog/social-media-statistics-philippines)
-- [BSP 2024 Report on E-payments Measurement](https://www.bsp.gov.ph/PaymentAndSettlement/2024_Report_on_E-payments_Measurement.pdf)
-- [GCash KKB explainer](https://manilashaker.com/how-to-split-the-bill-using-gcash-kkb/)
-- [Reddit example of barkada budget workflow](https://www.reddit.com/r/phinvest/comments/1c7hxqa/lf_budget_app_for_a_barkada_that_accounts/)
-- [Radar: Filipino money practices](https://radar.ph/the-uniquely-filipino-money-practices-that-influence-how-households-spend/)
-
-Указания для верстки:
-
-- Основная композиция: `2` компактные карточки оценки.
-- Не рисовать product flow: он уходит в `4.1–4.3`.
-- Оговорку про отсутствие счета Salmon встроить в блок `Strategic fit`.
-
 ---
 
-## Слайд 3.4. Где окно для Salmon
-
-Основа: `llm_data/direction research2.md` + `test_task.md`.
-
-Цель:
-Показать, что категория уже валидирована рынком, но сильное окно для Salmon все еще открыто: текущие продукты обычно сильны либо в координации, либо в расчете, но редко в обоих слоях сразу.
-
-Заголовок:
-`Рынок уже существует, но окно для Salmon еще открыто`
+## Слайд 3.4. Рынок уже существует, но окно для Salmon еще открыто
 
 Контент:
 
@@ -574,32 +321,9 @@ NE-аргумент:
 Почему окно еще открыто:
 `Банк обычно мыслит счетом одного человека, а group context, обсуждение, settlement и history живут в разных продуктах. Поэтому ближайший playbook здесь — social / community: малая доверенная группа -> общий контекст -> повтор.`
 
-Источники:
-
-- [llm_data/direction research2.md](/Users/roman/Documents/Pet Projects/Salmon test task/llm_data/direction research2.md)
-- [Splitwise](https://www.splitwise.com)
-- [Revolut split bills and groups](https://help.revolut.com/help/adding-money/with-money-from-friends-or-relatives/splitting-bill/)
-- [GCash KKB explainer](https://www.youtube.com/watch?v=_aQ-1_77iaM)
-- [Venmo privacy settings](https://help.venmo.com/cs/articles/changing-payment-privacy-hiding-past-payments-vhel191)
-- [WeChat Pay / group payments reference](https://www.nuvei.com/posts/a-guide-to-wechat-pay)
-
-Указания для верстки:
-
-- Основная композиция: одна `таблица на 4 строки`, затем короткие блоки `вывод` и `почему окно еще открыто`.
-- Подчеркнуть визуально разрыв `координация vs расчет`.
-- Не уходить в полный market map: задача слайда — показать окно, а не всех игроков рынка.
-
 ---
 
-## Слайд 4.1. Что такое Salmon Space
-
-Основа: `test_task.md` + `role_discription.md` + `llm_data/direction research2.md`.
-
-Цель:
-Показать предложенное решение не как отдельную split-функцию, а как новый совместный примитив: приватное пространство группы, где общий расход возникает, делится и закрывается в одном месте.
-
-Заголовок:
-`Salmon Space для общих расходов и расчетов`
+## Слайд 4.1. Salmon Space для общих расходов и расчетов
 
 Контент:
 
@@ -623,32 +347,9 @@ NE-аргумент:
 Вывод:
 `Банк видит отдельную транзакцию, Splitwise — долг, а Salmon Space видит общее событие группы от расхода до расчета.`
 
-Переход к следующему разделу:
-`Следующий вопрос — почему люди действительно поменяют привычку и начнут использовать такой Space вместо чата, ручных переводов и отдельных приложений.`
-
-Источники:
-
-- [test_task.md](/Users/roman/Documents/Pet Projects/Salmon test task/test_task.md)
-- [role_discription.md](/Users/roman/Documents/Pet Projects/Salmon test task/role_discription.md)
-- [llm_data/direction research2.md](/Users/roman/Documents/Pet Projects/Salmon test task/llm_data/direction research2.md)
-
-Указания для верстки:
-
-- Основная композиция: `1` акцентная строка сверху, ниже `таблица 2 колонки x 6 строк`, внизу короткий `вывод`.
-- Визуально подчеркнуть, что `Space` = `участники + расход + доли + расчет + история`.
-- Не превращать слайд в flow: пошаговый сценарий и NE-петля идут дальше.
-
 ---
 
-## Слайд 4.2. Почему люди поменяют привычку
-
-Основа: `solution_structure_final.md` + `llm_data/про основные сегменты.md` + `llm_data/direction research2.md`.
-
-Цель:
-Показать, что ценность решения не в еще одном способе перевести деньги, а в снижении социальной цены общих расходов: меньше неловкости, меньше ручной сверки, меньше потерь между учетом и расчетом.
-
-Заголовок:
-`Почему люди начнут пользоваться Salmon Space`
+## Слайд 4.2. Почему люди начнут пользоваться Salmon Space
 
 Контент:
 
@@ -671,34 +372,9 @@ NE-аргумент:
 Вывод:
 `Salmon Space сокращает уже существующий путь: общий расход, доли, обсуждение и расчет собираются в один поток.`
 
-Переход к следующему разделу:
-`Следующий вопрос — как именно запускается ключевое взаимодействие и где здесь появляется реальный сетевой эффект.`
-
-Источники:
-
-- [solution_structure_final.md](/Users/roman/Documents/Pet Projects/Salmon test task/solution_structure_final.md)
-- [llm_data/про основные сегменты.md](/Users/roman/Documents/Pet Projects/Salmon test task/llm_data/про основные сегменты.md)
-- [llm_data/direction research2.md](/Users/roman/Documents/Pet Projects/Salmon test task/llm_data/direction research2.md)
-- [Splitwise](https://www.splitwise.com)
-- [GCash KKB explainer](https://manilashaker.com/how-to-split-the-bill-using-gcash-kkb/)
-
-Указания для верстки:
-
-- Основная композиция: `1` акцентная строка, ниже `таблица 3 колонки x 3 строки`, внизу `1` короткий блок про изменение привычки.
-- Не повторять конкурентный слайд: здесь фокус на смене поведения пользователя.
-- Не уходить в NE-цепочку: она идет на `4.3`.
-
 ---
 
 ## Слайд 4.3. Где в Salmon Space появляется локальный сетевой эффект
-
-Основа: `llm_data/про основные сегменты.md` + `llm_data/known_cases.md` + `llm_data/local_social_proof_thresholds.md`.
-
-Цель:
-Показать, где именно в `Salmon Space` появляется реальный сетевой эффект: не в самом переводе, а в том, что группа видит один и тот же расход, закрывает его в одном месте и потом повторно использует тот же сценарий.
-
-Заголовок:
-`Где в Salmon Space появляется локальный сетевой эффект`
 
 Контент:
 
@@ -725,34 +401,9 @@ NE-аргумент:
 `Где эффект ограничен и куда растет`
 `Практический предел — малый доверенный круг, а не массовая сеть. Позже поверх этого прямого эффекта может вырасти непрямой слой у ресторанов, travel- и event-партнеров, если удобный split начнет влиять на выбор места и способ оплаты.`
 
-Переход к следующему разделу:
-`Следующий вопрос — какие сущности и связи нужны в системе, чтобы такой Space работал как продукт, а не как разовая функция.`
-
-Источники:
-
-- [llm_data/про основные сегменты.md](/Users/roman/Documents/Pet Projects/Salmon test task/llm_data/про основные сегменты.md)
-- [llm_data/known_cases.md](/Users/roman/Documents/Pet Projects/Salmon test task/llm_data/known_cases.md)
-- [llm_data/local_social_proof_thresholds.md](/Users/roman/Documents/Pet Projects/Salmon test task/llm_data/local_social_proof_thresholds.md)
-- [a16z, The Dynamics of Network Effects](https://a16z.com/the-dynamics-of-network-effects/)
-
-Указания для верстки:
-
-- Основная композиция: `1` акцентная строка, ниже `таблица 3 колонки x 4 строки`, внизу `2` коротких блока.
-- Не рисовать длинную цепочку из 8-9 шагов: здесь важнее логика роста, чем детализация сценария.
-- Подчеркнуть визуально переход `разовый расход -> повторное использование -> перенос в следующую группу`.
-- В реальной верстке сделать шаг `4` визуально шире остальных: именно там соединяются `повтор` и `масштабирование`.
-
 ---
 
 ## Слайд 5.1. Петля Salmon Space
-
-Основа: `solution_structure_final.md` + текущая логика `4.1–4.3`.
-
-Цель:
-Показать core loop продукта: как один и тот же `Space` сначала помогает закрыть общий расход, затем возвращает ту же группу на следующий повод и потом переносится в новую группу.
-
-Заголовок:
-`Петля Salmon Space`
 
 Контент:
 
@@ -789,31 +440,9 @@ flowchart LR
 Принцип:
 `Внутри одной группы петля отвечает за повторяемость. Перенос в новую группу отвечает за масштабирование. Вместе они превращают разовый split в накапливающийся сетевой эффект.`
 
-Переход к следующему разделу:
-`Следующий вопрос — как выглядит первый рабочий сценарий внутри этой петли и что пользователь делает шаг за шагом.`
-
-Источники:
-
-- [solution_structure_final.md](/Users/roman/Documents/Pet Projects/Salmon test task/solution_structure_final.md)
-- [slides_draft.md](/Users/roman/Documents/Pet Projects/Salmon test task/slides_draft.md)
-
-Указания для верстки:
-
-- Основная композиция: сверху `1` акцентная строка, слева схема петли из `5` блоков, справа таблица `блок -> зачем`.
-- Визуально разделить `повтор в той же группе` и `новый Space`: это разные функции петли.
-- Не перегружать математикой NE; смысл должен считываться как `повтор` + `перенос`.
-
 ---
 
 ## Слайд 5.2. Целевое решение: Salmon Space
-
-Основа: `solution_structure_final.md` + `llm_data/про основные сегменты.md`.
-
-Цель:
-Показать целевое решение: каким должен быть `Salmon Space`, если он станет стандартным местом для управления общими расходами внутри группы `>= 2` человек.
-
-Заголовок:
-`Целевое решение: Salmon Space`
 
 Контент:
 
@@ -845,34 +474,9 @@ flowchart LR
 Вывод:
 `Это уже не split-функция, а общее пространство группы, которое переживает один чек и становится стандартным местом для следующих общих расходов.`
 
-Переход к следующему разделу:
-`Следующий вопрос — какие сущности и связи нужны, чтобы такой Space работал как продукт, а не как разовая функция.`
-
-Источники:
-
-- [solution_structure_final.md](/Users/roman/Documents/Pet Projects/Salmon test task/solution_structure_final.md)
-- [llm_data/про основные сегменты.md](/Users/roman/Documents/Pet Projects/Salmon test task/llm_data/про основные сегменты.md)
-- [slides_draft.md](/Users/roman/Documents/Pet Projects/Salmon test task/slides_draft.md)
-
-Указания для верстки:
-
-- Основная композиция: `2` симметричные колонки — `создатель Space` и `участник`.
-- Не уходить в MVP-ограничения и полный список точек входа: это целевое решение.
-- Пространство на двоих допустимо, но визуально фокус держать на малой группе `>= 2`.
-- Копилку на будущую трату показать как естественное расширение Space, а не как отдельный продукт.
-- В реальной верстке сделать это как `2` карточки-сценария, а не как тяжелые таблицы: меньше линий, больше воздуха.
-
 ---
 
 ## Слайд 5.3. Архитектура / дизайн
-
-Основа: `solution_structure_final.md` + текущая логика `4.1–5.2`.
-
-Цель:
-Дать прототип архитектуры продукта: какие сущности и связи нужны, чтобы `Salmon Space` сохранял контекст группы между расходами, расчетами и повторными поводами.
-
-Заголовок:
-`Архитектура / дизайн`
 
 Контент:
 
@@ -915,32 +519,9 @@ flowchart LR
 Принцип:
 `Баланс — производная сущность. Сначала есть группа и повод, затем расход или сбор, потом доли и расчет.`
 
-Переход к следующему разделу:
-`Следующий вопрос — как будем проверять, что эта архитектура и эта петля действительно создают спрос, повторяемость и сетевой эффект.`
-
-Источники:
-
-- [solution_structure_final.md](/Users/roman/Documents/Pet Projects/Salmon test task/solution_structure_final.md)
-- [slides_draft.md](/Users/roman/Documents/Pet Projects/Salmon test task/slides_draft.md)
-
-Указания для верстки:
-
-- Основная композиция: слева простая схема сущностей, справа таблица `сущность -> зачем`.
-- Не перегружать банковыми терминами; смысл слайда — `отношения и контекст первичны`.
-- Визуально показать цикл `История -> Space`, чтобы связь с `5.1` не терялась.
-- Если mermaid окажется перегруженным, заменить его на ручную схему из `6–7` блоков с короткими подписями.
-
 ---
 
 ## Слайд 5.4. Свобода использования
-
-Основа: `test_task.md` + текущая логика `4.1–5.3`.
-
-Цель:
-Показать, сколько свободы остается у пользователей внутри `Salmon Space`: какие сценарии мы хотим поддержать, а где должны сознательно ограничивать продукт ради доверия.
-
-Заголовок:
-`Свобода использования`
 
 Контент:
 
@@ -961,32 +542,9 @@ flowchart LR
 Вывод:
 `Свобода нужна в сценариях, повторах и переписке внутри группы; ограничения нужны в приватности, давлении и смешении чужих контекстов.`
 
-Переход к следующему разделу:
-`Следующий вопрос — по каким критериям поймем, что такая свобода не мешает продукту, а усиливает спрос, повторяемость и экономику.`
-
-Источники:
-
-- [test_task.md](/Users/roman/Documents/Pet Projects/Salmon test task/test_task.md)
-- [slides_draft.md](/Users/roman/Documents/Pet Projects/Salmon test task/slides_draft.md)
-
-Указания для верстки:
-
-- Основная композиция: `1` таблица `полезная свобода / где нужны ограничения`.
-- В реальной верстке показать левую колонку как поддерживаемые сценарии, правую — как guardrails продукта.
-- Визуально сделать левую колонку более “живой”, а правую более “защитной”.
-- Не превращать слайд в список policy rules; это продуктовые принципы, а не compliance checklist.
-
 ---
 
 ## Слайд 6.1. Критерии успеха
-
-Основа: `solution_structure_final.md` + текущая логика `3.x–5.x`.
-
-Цель:
-Показать, какие гипотезы нужно валидировать в первую очередь по трем типам эффектов Andrew Chen: `Acquisition`, `Engagement`, `Economic`.
-
-Заголовок:
-`Критерии успеха`
 
 Контент:
 
@@ -1010,31 +568,9 @@ flowchart LR
 
 `Кроме порогов, смотрим качественные сигналы: обращения в поддержку, drop-off после приглашений и напоминаний, причины отказа и реакции пользователей в соцсетях и чатах.`
 
-Переход к следующему разделу:
-`Следующий вопрос — какой минимальный продукт нужен, чтобы пройти первые проверки без лишнего scope.`
-
-Источники:
-
-- [solution_structure_final.md](/Users/roman/Documents/Pet Projects/Salmon test task/solution_structure_final.md)
-- [slides_draft.md](/Users/roman/Documents/Pet Projects/Salmon test task/slides_draft.md)
-
-Указания для верстки:
-
-- Основная композиция: `1` таблица из `7` строк, под ней `1` короткий блок с порядком проверки.
-- Визуально сгруппировать строки по `Acquisition / Engagement / Economic`.
-- Ссылки ставить как гиперссылки на название источника в последней колонке или прямо в тексте обоснования.
-
 ---
 
 ## Слайд 7.1. Основные риски и митигация
-
-Основа: `solution_structure_final.md` + текущая логика `3.x–6.1`.
-
-Цель:
-Показать, где ставка на `Salmon Space` может не сработать и как мы будем снижать эти риски, не теряя фокус на core loop.
-
-Заголовок:
-`Основные риски и митигация`
 
 Контент:
 
@@ -1051,31 +587,9 @@ flowchart LR
 Вывод:
 `Главный риск — спутать удобную group utility с настоящим сетевым продуктом. Поэтому мы рано проверяем не только usage, но и расчет, повторяемость, перенос в новые графы и банковую экономику.`
 
-Переход к приложению:
-`Дальше — только supporting materials: scope первой версии и полная карта направлений.`
-
-Источники:
-
-- [solution_structure_final.md](/Users/roman/Documents/Pet Projects/Salmon test task/solution_structure_final.md)
-- [slides_draft.md](/Users/roman/Documents/Pet Projects/Salmon test task/slides_draft.md)
-
-Указания для верстки:
-
-- Основная композиция: `1` таблица из `5` строк.
-- Выделить первые `2` риска как самые критичные, остальные `3` как риски масштабирования и экономики.
-- Не расписывать длинные contingency plans: на слайде должны остаться только риск и первая осмысленная митигация.
-
 ---
 
 ## Слайд 7.2. Первые 30 дней
-
-Основа: `test_task.md` + текущая логика `5.x–7.1`.
-
-Цель:
-Показать, как именно я бы провел первый месяц после согласования ставки на `Salmon Space`, чтобы быстро перевести гипотезу в проверяемый продукт.
-
-Заголовок:
-`Первые 30 дней`
 
 Контент:
 
@@ -1093,31 +607,9 @@ flowchart LR
 Вывод:
 `Цель первого месяца — не построить “полный” social finance продукт, а быстро пройти последовательность go / no-go решений на реальных группах друзей.`
 
-Переход к приложению:
-`Дальше — supporting materials: что входит в MVP и полная карта направлений.`
-
-Источники:
-
-- [test_task.md](/Users/roman/Documents/Pet Projects/Salmon test task/test_task.md)
-- [slides_draft.md](/Users/roman/Documents/Pet Projects/Salmon test task/slides_draft.md)
-
-Указания для верстки:
-
-- Основная композиция: `1` акцентная строка сверху и ниже `3` периода в виде горизонтальной ленты или таблицы.
-- Не превращать слайд в delivery plan на квартал; это короткий месяц проверки ставки.
-- `Дни 22–30` сделать визуально похожими на decision gate, а не на обычный шаг roadmap.
-
 ---
 
-## Appendix A. Что входит в MVP, а что позже
-
-Основа: рабочая дискуссия по `5.2`.
-
-Цель:
-Вынести scope-решения из основной истории и сохранить их для обсуждения продукта и валидации.
-
-Заголовок:
-`Приложение. Что входит в MVP, а что позже`
+## Appendix A. Приложение. Что входит в MVP, а что позже
 
 Контент:
 
@@ -1137,21 +629,9 @@ flowchart LR
 Вывод:
 `Первая версия должна доказать не полноту продукта, а базовую петлю: создать Space -> пригласить -> закрыть расчет -> вернуться в тот же Space.`
 
-Источники:
-
-- [slides_draft.md](/Users/roman/Documents/Pet Projects/Salmon test task/slides_draft.md)
-
 ---
 
-## Appendix B. Полная карта направлений для 2.5
-
-Основа: текущая подробная версия `2.5`, сохраненная как backup slide до появления внешней таблицы.
-
-Цель:
-Сохранить полную раскладку направлений на случай обсуждения с детализацией, не перегружая основной слайд.
-
-Заголовок:
-`Приложение. Полная карта направлений для 2.5`
+## Appendix B. Приложение. Полная карта направлений для 2.5
 
 Контент:
 
@@ -1171,27 +651,9 @@ flowchart LR
 Вывод:
 `Эта версия уходит в приложение; позднее ее можно заменить ссылкой на внешнюю таблицу с полным списком категорий и гипотез.`
 
-Источники:
-
-- [LendingTree, Friends & Money Report](https://www.lendingtree.com/credit-cards/study/friends-money-report/)
-- [Tink x Splitwise Pay by Bank](https://tink.com/press/splitwise-tink-partner/)
-- [llm_data/salmon_website_content.md](/Users/roman/Documents/Pet Projects/Salmon test task/llm_data/salmon_website_content.md)
-- [Revolut Blog, Group Vaults](https://www.revolut.com/blog/post/hit-savings-goals-faster-with-group-vaults/)
-- [Zelle press release: $1T in 2024](https://www.zelle.com/press-releases/zelle-shatters-records-1-trillion-sent-single-year)
-- [Faster Payments Council: Pix by the Numbers Q1 2025](https://fasterpaymentscouncil.org/userfiles/2080/files/Pix%20by%20the%20Numbers%20Q1%202025.pdf)
-- [llm_data/WeChat.md](/Users/roman/Documents/Pet Projects/Salmon test task/llm_data/WeChat.md)
-
 ---
 
-## Appendix C. С какими артефактами иду к функциям
-
-Основа: `test_task.md` + текущая логика `4.1–5.4`.
-
-Цель:
-Показать, с какими конкретными артефактами я приду к `Product`, `UX`, `IT` и `API / backend`, чтобы перевести идею `Salmon Space` в исполнение.
-
-Заголовок:
-`Приложение. С какими артефактами иду к функциям`
+## Appendix C. Приложение. С какими артефактами иду к функциям
 
 Контент:
 
@@ -1209,14 +671,3 @@ flowchart LR
 
 Вывод:
 `Этот слайд переводит идею из продуктовой логики в набор рабочих артефактов для реальной кросс-функциональной команды.`
-
-Источники:
-
-- [test_task.md](/Users/roman/Documents/Pet Projects/Salmon test task/test_task.md)
-- [slides_draft.md](/Users/roman/Documents/Pet Projects/Salmon test task/slides_draft.md)
-
-Указания для верстки:
-
-- Основная композиция: `1` таблица `функция -> артефакты -> зачем`.
-- Не превращать слайд в delivery plan; это карта handoff между идеей и исполнением.
-- Визуально сделать колонку `С чем прихожу` самой заметной: это главный ответ на вопрос задания.
