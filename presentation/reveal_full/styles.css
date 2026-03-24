@@ -1,0 +1,405 @@
+:root {
+  --bg-base: #ffffff;
+  --surface: #ffffff;
+  --surface-soft: #f8f6f3;
+  --stroke: #e3dfd9;
+  --text-primary: #141414;
+  --text-secondary: #555555;
+  --text-muted: #777777;
+  --brand-coral: #f45b5f;
+  --slide-w: min(94vw, 1240px);
+  --radius: 18px;
+  --tile-gap: 0.46rem;
+  --glass-fill: rgba(255, 255, 255, 0.44);
+  --glass-fill-soft: rgba(255, 255, 255, 0.3);
+  --glass-stroke: rgba(255, 255, 255, 0.62);
+  --glass-shadow: 0 20px 44px -30px rgba(31, 38, 60, 0.45);
+}
+
+html,
+body {
+  height: 100%;
+  background: linear-gradient(180deg, #f7f8fa 0%, #f3f4f6 100%);
+}
+
+.reveal {
+  font-family: "Manrope", "Segoe UI", sans-serif;
+  color: var(--text-primary);
+  text-rendering: geometricPrecision;
+}
+
+.reveal .slides {
+  text-align: left;
+}
+
+.reveal .slides section {
+  padding: 0;
+}
+
+.slide-shell {
+  width: var(--slide-w);
+  margin: 0 auto;
+  display: grid;
+  gap: 0.62rem;
+}
+
+.main-title {
+  margin: 0 0 0.6rem;
+  color: var(--brand-coral);
+  font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+  font-size: clamp(1.98rem, 3.6vw, 2.76rem);
+  line-height: 1.04;
+  letter-spacing: 0.01em;
+  font-weight: 800;
+}
+
+.tiles-grid {
+  display: grid;
+  gap: var(--tile-gap);
+  padding: 0 var(--tile-gap);
+}
+
+.exec-grid {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-areas:
+    "what how"
+    "why why"
+    "risk trade";
+}
+
+.exec-what {
+  grid-area: what;
+}
+
+.exec-how {
+  grid-area: how;
+}
+
+.exec-why {
+  grid-area: why;
+}
+
+.exec-risk {
+  grid-area: risk;
+}
+
+.exec-trade {
+  grid-area: trade;
+}
+
+.bet-grid {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.tile {
+  background:
+    linear-gradient(
+      140deg,
+      rgba(255, 255, 255, 0.66) 0%,
+      rgba(255, 255, 255, 0.4) 42%,
+      rgba(255, 255, 255, 0.3) 100%
+    );
+  border: 1px solid var(--glass-stroke);
+  border-radius: var(--radius);
+  padding: 0.66rem 0.78rem;
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(16px) saturate(155%);
+  -webkit-backdrop-filter: blur(16px) saturate(155%);
+}
+
+.tile-accent {
+  background:
+    linear-gradient(
+      140deg,
+      rgba(255, 255, 255, 0.72) 0%,
+      rgba(250, 240, 238, 0.6) 52%,
+      rgba(255, 255, 255, 0.42) 100%
+    );
+}
+
+.slide-shell > .tile {
+  margin: 0 var(--tile-gap);
+}
+
+.accent-text {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 1.02rem;
+  line-height: 1.28;
+  font-weight: 500;
+}
+
+.tiles-stack {
+  display: grid;
+  gap: var(--tile-gap);
+  max-height: 60vh;
+  overflow: auto;
+  scrollbar-width: thin;
+  padding: 0 var(--tile-gap);
+}
+
+.content-block {
+  border-color: color-mix(in srgb, var(--glass-stroke) 82%, #ffffff 18%);
+}
+
+.tiles-stack::-webkit-scrollbar {
+  width: 8px;
+}
+
+.tiles-stack::-webkit-scrollbar-thumb {
+  border-radius: 99px;
+  background: rgba(92, 102, 124, 0.36);
+}
+
+.tiles-stack::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.markdown-body > :first-child {
+  margin-top: 0;
+}
+
+.markdown-body > :last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body p,
+.markdown-body li,
+.markdown-body td,
+.markdown-body th,
+.markdown-body blockquote {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.26;
+}
+
+.markdown-body strong {
+  color: var(--text-primary);
+  font-weight: 800;
+}
+
+.markdown-body code {
+  background: rgba(255, 255, 255, 0.54);
+  border: 1px solid rgba(255, 255, 255, 0.74);
+  color: var(--text-primary);
+  border-radius: 7px;
+  padding: 0.06em 0.28em;
+  font-family: "Manrope", "Segoe UI", sans-serif;
+  font-size: 0.93em;
+  font-weight: 700;
+}
+
+.markdown-body a {
+  color: var(--brand-coral);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.1em;
+  font-weight: 700;
+}
+
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5 {
+  margin: 0.58rem 0 0.36rem;
+  color: var(--brand-coral);
+  font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  line-height: 1.08;
+  text-transform: uppercase;
+}
+
+.markdown-body h3 {
+  font-size: 1.52rem;
+}
+
+.markdown-body h4 {
+  font-size: 1.28rem;
+}
+
+.markdown-body ul {
+  list-style: none;
+  margin: 0.2rem 0 0.36rem;
+  padding: 0;
+}
+
+.markdown-body ul li {
+  position: relative;
+  padding-left: 1.62rem;
+  margin: 0 0 0.34rem;
+}
+
+.markdown-body ul li::before {
+  content: "";
+  position: absolute;
+  left: 0.1rem;
+  top: 0.5em;
+  width: 0.46rem;
+  height: 0.46rem;
+  border-radius: 999px;
+  border: 2px solid var(--brand-coral);
+  transform: translateY(-50%);
+  box-sizing: border-box;
+}
+
+.markdown-body ul ul {
+  margin-top: 0.24rem;
+}
+
+.markdown-body ul ul li {
+  padding-left: 1.62rem;
+  margin-bottom: 0.26rem;
+}
+
+.markdown-body ul ul li::before {
+  width: 0.46rem;
+  height: 0.46rem;
+  border-width: 2px;
+  left: 0.1rem;
+}
+
+.markdown-body ul.single-item > li {
+  padding-left: 0;
+}
+
+.markdown-body ul.single-item > li::before {
+  display: none;
+}
+
+.markdown-body ol {
+  margin: 0.2rem 0 0.36rem;
+  padding-left: 1.34rem;
+}
+
+.markdown-body ol li {
+  margin-bottom: 0.34rem;
+  padding-left: 0.24rem;
+}
+
+.markdown-body table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 0.3rem 0 0.46rem;
+  border: 1px solid rgba(255, 255, 255, 0.66);
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.36);
+}
+
+.markdown-body th,
+.markdown-body td {
+  padding: 0.36rem 0.44rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.58);
+  vertical-align: top;
+}
+
+.markdown-body thead th {
+  background: rgba(255, 255, 255, 0.58);
+  color: var(--brand-coral);
+  font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+  font-size: 0.94rem;
+  letter-spacing: 0.015em;
+  font-weight: 800;
+}
+
+.markdown-body tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.markdown-body tr:last-child td {
+  border-bottom: none;
+}
+
+.markdown-body blockquote {
+  margin: 0.32rem 0;
+  padding: 0.28rem 0.54rem;
+  border-left: 3px solid color-mix(in srgb, var(--brand-coral) 46%, #cfcbc5);
+  background: rgba(255, 255, 255, 0.42);
+  border-radius: 8px;
+}
+
+.meta-flag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.2em;
+  height: 1.2em;
+  border-radius: 999px;
+  border: 1px solid #d0b8b5;
+  background: #f9f4f3;
+  color: #9f6e6b;
+  font-size: 0.76em;
+  font-weight: 700;
+  line-height: 1;
+  vertical-align: 0.05em;
+}
+
+.loading {
+  position: fixed;
+  inset: auto 1.2rem 1rem auto;
+  background: rgba(20, 20, 20, 0.82);
+  color: #fff;
+  padding: 0.38rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  z-index: 9999;
+}
+
+.loading.hidden {
+  display: none;
+}
+
+@media (max-width: 1200px) {
+  .slide-shell {
+    width: min(96vw, 1140px);
+  }
+
+  .tiles-stack {
+    max-height: 64vh;
+  }
+}
+
+@media (max-width: 920px) {
+  .exec-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "what"
+      "how"
+      "why"
+      "risk"
+      "trade";
+  }
+
+  .bet-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .main-title {
+    font-size: clamp(1.66rem, 7.4vw, 2.28rem);
+    margin-bottom: 0.42rem;
+  }
+
+  .tile {
+    padding: 0.54rem 0.56rem;
+  }
+
+  .accent-text,
+  .markdown-body p,
+  .markdown-body li,
+  .markdown-body td,
+  .markdown-body th,
+  .markdown-body blockquote {
+    font-size: 0.92rem;
+  }
+
+  .markdown-body h3 {
+    font-size: 1.28rem;
+  }
+
+  .tiles-stack {
+    max-height: 67vh;
+  }
+}
