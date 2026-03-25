@@ -324,18 +324,21 @@ body {
   padding-left: 0.24rem;
 }
 
-.exec-how .markdown-body ol {
+.exec-how .markdown-body ol,
+.appendix-b-best-practice .markdown-body ol {
   list-style: decimal;
   margin: 0.58rem 0 0.36rem;
   padding-left: 1.46rem;
 }
 
-.exec-how .markdown-body ol li {
+.exec-how .markdown-body ol li,
+.appendix-b-best-practice .markdown-body ol li {
   margin: 0 0 0.34rem;
   padding-left: 0.28rem;
 }
 
-.exec-how .markdown-body ol li::marker {
+.exec-how .markdown-body ol li::marker,
+.appendix-b-best-practice .markdown-body ol li::marker {
   color: var(--brand-coral);
   font-weight: 700;
 }
@@ -349,6 +352,24 @@ body {
   border-radius: 12px;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.36);
+}
+
+#appendix-b-ne-case-studies--core-interactions .markdown-body table {
+  table-layout: fixed;
+}
+
+#appendix-b-ne-case-studies--core-interactions .markdown-body th,
+#appendix-b-ne-case-studies--core-interactions .markdown-body td {
+  width: 33.333%;
+}
+
+#appendix-d-ne-current-state-in-fintech .markdown-body table {
+  table-layout: fixed;
+}
+
+#appendix-d-ne-current-state-in-fintech .markdown-body th,
+#appendix-d-ne-current-state-in-fintech .markdown-body td {
+  width: 33.333%;
 }
 
 .markdown-body th,

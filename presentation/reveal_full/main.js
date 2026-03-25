@@ -36,6 +36,32 @@ const INTERNAL_ANCHOR_ALIASES = Object.values(APPENDIX_IDS).reduce((acc, id) => 
   return acc;
 }, {});
 
+function getRepoBasePath() {
+  if (typeof window === 'undefined' || !window.location || !window.location.pathname) {
+    return '/';
+  }
+
+  const marker = '/presentation/reveal_full/';
+  const markerIndex = window.location.pathname.indexOf(marker);
+  if (markerIndex >= 0) {
+    const basePath = window.location.pathname.slice(0, markerIndex + 1);
+    return basePath || '/';
+  }
+
+  if (window.location.pathname.endsWith('/')) {
+    return window.location.pathname;
+  }
+
+  const lastSlash = window.location.pathname.lastIndexOf('/');
+  return lastSlash >= 0 ? window.location.pathname.slice(0, lastSlash + 1) : '/';
+}
+
+const REPO_BASE_PATH = getRepoBasePath();
+
+function toRepoRootPath(relativeOrAbsolutePath) {
+  return `${REPO_BASE_PATH}${relativeOrAbsolutePath.replace(/^\/+/, '')}`;
+}
+
 function slugAscii(input, fallback) {
   const clean = input
     .normalize('NFKD')
@@ -64,7 +90,10 @@ function deriveSlideId(title, index) {
 }
 
 function cleanDisplayTitle(title) {
-  return title.replace(/^Слайд\s+\d+\.\s*/i, '').trim();
+  return title
+    .replace(/^Слайд\s+\d+\.\s*/i, '')
+    .replace(/^Appendix\s+[A-Z]\.\s*/i, '')
+    .trim();
 }
 
 function parseSlideBlock(rawBlock, index) {
@@ -113,13 +142,13 @@ function normalizeHref(href) {
   }
 
   if (/^https?:\/\//i.test(decoded)) {
-    return decoded;
+    return encodeURI(decoded);
   }
 
   for (const prefix of LOCAL_REPO_PREFIXES) {
     if (decoded.startsWith(tryDecodeUri(prefix))) {
       const relativePath = decoded.slice(tryDecodeUri(prefix).length);
-      return `/${encodeURI(relativePath)}`;
+      return encodeURI(toRepoRootPath(relativePath));
     }
   }
 
@@ -127,11 +156,11 @@ function normalizeHref(href) {
   const markerIndex = decoded.indexOf(marker);
   if (decoded.startsWith('/Users/') && markerIndex >= 0) {
     const relativePath = decoded.slice(markerIndex + marker.length);
-    return `/${encodeURI(relativePath)}`;
+    return encodeURI(toRepoRootPath(relativePath));
   }
 
   if (decoded.startsWith('/')) {
-    return encodeURI(decoded);
+    return encodeURI(toRepoRootPath(decoded));
   }
 
   return raw;
@@ -639,6 +668,38 @@ function buildWhyBetCustom(slide) {
   return section;
 }
 
+function buildAppendixCaseStudiesCustom(slide) {
+  const section = document.createElement('section');
+  section.id = slide.id;
+  section.dataset.backgroundColor = '#f5f5f6';
+
+  const shell = document.createElement('div');
+  shell.className = 'slide-shell';
+
+  const title = document.createElement('h2');
+  title.className = 'main-title';
+  title.textContent = slide.title;
+  shell.appendChild(title);
+
+  const tilesStack = document.createElement('div');
+  tilesStack.className = 'tiles-stack';
+  const blocks = splitContentBlocks(slide.contentMarkdown);
+  blocks.forEach((blockMarkdown) => {
+    const match = blockMarkdown.match(/^\s*`([^`]+)`\s*\n([\s\S]+)$/);
+    if (match && normalizeSectionKey(match[1]) === normalizeSectionKey('Best practice:')) {
+      tilesStack.appendChild(
+        createCustomTile(match[1], match[2].trim(), 'appendix-b-best-practice')
+      );
+      return;
+    }
+    tilesStack.appendChild(renderMarkdownBlock(blockMarkdown));
+  });
+  shell.appendChild(tilesStack);
+
+  section.appendChild(shell);
+  return section;
+}
+
 function buildAppendixDividerSlide(slide) {
   const section = document.createElement('section');
   section.id = slide.id;
@@ -762,7 +823,7 @@ function buildPhoneRightColumnsCustom(slide) {
   phoneFrame.className = 'why-not-phone-frame';
   const phoneImage = document.createElement('img');
   phoneImage.className = 'why-not-phone-image';
-  phoneImage.src = '/image.png';
+  phoneImage.src = '../../image.png';
   phoneImage.alt = 'Slide screenshot';
   phoneFrame.appendChild(phoneImage);
   right.appendChild(phoneFrame);
@@ -804,6 +865,10 @@ function buildSlideSection(slide) {
     return buildPhoneRightColumnsCustom(slide);
   }
 
+  if (slide.id === 'appendix-b-ne-case-studies--core-interactions') {
+    return buildAppendixCaseStudiesCustom(slide);
+  }
+
   if (slide.id === 'appendix') {
     return buildAppendixDividerSlide(slide);
   }
@@ -843,7 +908,11 @@ function buildSlideSection(slide) {
 }
 
 async function loadMarkdownSource() {
-  const sources = ['../../slides_draft_final.md', '/slides_draft_final.md'];
+  const sources = [
+    '../../slides_draft_final.md',
+    `${REPO_BASE_PATH}slides_draft_final.md`,
+    '/slides_draft_final.md',
+  ];
 
   for (const sourcePath of sources) {
     try {

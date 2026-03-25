@@ -1,0 +1,68 @@
+name: Deploy Reveal Deck To GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare site artifact
+        run: |
+          mkdir -p _site
+          cp -R presentation _site/
+          cp slides_draft_final.md _site/
+          cp image.png _site/
+          cp theory_nfx.md _site/
+          cp vision_ideas.md _site/
+          cat > _site/index.html <<'HTML'
+          <!doctype html>
+          <html lang="en">
+            <head>
+              <meta charset="utf-8" />
+              <meta name="viewport" content="width=device-width, initial-scale=1" />
+              <title>Salmon Deck</title>
+              <meta http-equiv="refresh" content="0; url=./presentation/reveal_full/index.html" />
+            </head>
+            <body>
+              <p>
+                Redirecting to
+                <a href="./presentation/reveal_full/index.html">presentation</a>.
+              </p>
+            </body>
+          </html>
+          HTML
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
