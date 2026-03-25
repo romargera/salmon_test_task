@@ -720,6 +720,7 @@ function buildAppendixDividerSlide(slide) {
 function buildCoverTitleSlide(slide) {
   const section = document.createElement('section');
   section.id = slide.id;
+  section.className = 'cover-title-slide';
   section.dataset.backgroundColor = '#f5f5f6';
 
   const shell = document.createElement('div');
@@ -845,6 +846,8 @@ function renderMarkdownBlock(blockMarkdown) {
 }
 
 function buildSlideSection(slide) {
+  const titleKey = normalizeSectionKey(slide.title);
+
   if (slide.id === 'slide-1-executive-summary') {
     return buildExecutiveSummaryCustom(slide);
   }
@@ -853,7 +856,11 @@ function buildSlideSection(slide) {
     return buildWhyBetCustom(slide);
   }
 
-  if (slide.id === 'slide-0-testovoe-zadanie-salmon') {
+  if (
+    slide.id === 'slide-0-testovoe-zadanie-salmon' ||
+    slide.id === 'slide-0-salmon' ||
+    (titleKey.includes('тестовоезадание') && titleKey.includes('salmon'))
+  ) {
     return buildCoverTitleSlide(slide);
   }
 
