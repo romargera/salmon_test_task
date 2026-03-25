@@ -24,6 +24,7 @@ const APPENDIX_IDS = {
   R: 'appendix-r-artifacts-partner-functions',
   S: 'appendix-s-weird-hypotheses',
   T: 'appendix-t-faq-defense',
+  U: 'appendix-u-detailed-scenarios',
 };
 
 const LOCAL_REPO_PREFIXES = [
@@ -660,8 +661,19 @@ function buildWhyBetCustom(slide) {
           },
         ];
 
+  const hasThreeTiles = tileSpecs.length === 3;
+  if (hasThreeTiles) {
+    grid.classList.add('bet-grid-three');
+  }
+
   tileSpecs.forEach((tileSpec, index) => {
-    grid.appendChild(createCustomTile(tileSpec.heading, tileSpec.bodyMarkdown, `bet-${index + 1}`));
+    const extraClasses = [`bet-${index + 1}`];
+    if (hasThreeTiles && index === 2) {
+      extraClasses.push('bet-wide');
+    }
+    grid.appendChild(
+      createCustomTile(tileSpec.heading, tileSpec.bodyMarkdown, extraClasses.join(' '))
+    );
   });
   shell.appendChild(grid);
   section.appendChild(shell);
@@ -759,32 +771,28 @@ function buildWhatScenariosCustom(slide) {
   title.textContent = slide.title;
   shell.appendChild(title);
 
-  const table = parseFirstMarkdownTable(slide.contentMarkdown);
-  const creatorHeading = (table?.headers?.[0] || 'Создатель Space').toUpperCase();
-  const participantHeading = (table?.headers?.[1] || 'Участник').toUpperCase();
-  const creatorItems = (table?.rows || [])
-    .map((row) => row[0])
-    .filter(Boolean)
-    .map((item) => `- ${item}`)
-    .join('\n');
-  const participantItems = (table?.rows || [])
-    .map((row) => row[1])
-    .filter(Boolean)
-    .map((item) => `- ${item}`)
-    .join('\n');
+  if (slide.accent) {
+    const accentEl = document.createElement('p');
+    accentEl.className = 'accent-text';
+    accentEl.innerHTML = renderInlineMarkdown(normalizeAccent(slide.accent));
+    shell.appendChild(accentEl);
+  }
 
-  const resultText =
-    extractBacktickBlockAfterHeading(slide.contentMarkdown, 'ОБРАЗ РЕЗУЛЬТАТА') ||
-    'Опыт должен быть короче и удобнее мультимодального ("ручного") пути: заведение затрат -> доли -> расчет -> выплата.';
-
+  const sections = parseLabeledBacktickSections(slide.contentMarkdown);
   const grid = document.createElement('div');
   grid.className = 'tiles-grid scenarios-grid';
 
-  const creatorTile = createCustomTile(creatorHeading, creatorItems, 'scenario-creator');
-  const participantTile = createCustomTile(participantHeading, participantItems, 'scenario-participant');
-  const resultTile = createCustomTile('ОБРАЗ РЕЗУЛЬТАТА', resultText, 'scenario-result');
+  if (sections.length > 0) {
+    sections.forEach((sectionItem) => {
+      grid.appendChild(
+        createCustomTile(sectionItem.title, sectionItem.bodyMarkdown, 'scenario-section')
+      );
+    });
+  } else {
+    const fallback = renderMarkdownBlock(slide.contentMarkdown);
+    grid.appendChild(fallback);
+  }
 
-  grid.append(creatorTile, participantTile, resultTile);
   shell.appendChild(grid);
 
   section.appendChild(shell);

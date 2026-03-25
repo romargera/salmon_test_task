@@ -1,0 +1,4 @@
+## main...origin/main
+ M slides_draft.md
+ M slides_draft_final.md
+?? backups/

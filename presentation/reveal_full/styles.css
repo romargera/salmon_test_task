@@ -91,23 +91,12 @@ body {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 }
 
+.bet-grid-three .bet-wide {
+  grid-column: 1 / -1;
+}
+
 .scenarios-grid {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  grid-template-areas:
-    "creator participant"
-    "result result";
-}
-
-.scenario-creator {
-  grid-area: creator;
-}
-
-.scenario-participant {
-  grid-area: participant;
-}
-
-.scenario-result {
-  grid-area: result;
 }
 
 .tile {
@@ -600,10 +589,6 @@ body {
 
   .scenarios-grid {
     grid-template-columns: 1fr;
-    grid-template-areas:
-      "creator"
-      "participant"
-      "result";
   }
 
   .main-title {
