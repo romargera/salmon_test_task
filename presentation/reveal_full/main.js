@@ -235,6 +235,14 @@ function normalizeMarkdown(md) {
   out = out.replace(/\[\[([0-9]+)\]\]\(([^)]+)\)/g, '[$1]($2)');
   out = out.replace(/\[\[([0-9]+)\]\]/g, '[$1]');
   out = out.replace(/`?\[A\]`?/g, '<span class="meta-flag">A</span>');
+  out = out.replace(
+    /Прим\. Будет валидировано на PH\./g,
+    '<span class="note-muted"><em>Прим. Будет валидировано на PH.</em></span>'
+  );
+  out = out.replace(
+    /Прим\. Будет рассчитан Bottom Up и cross-check\./g,
+    '<span class="note-muted"><em>Прим. Будет рассчитан Bottom Up и cross-check.</em></span>'
+  );
   out = promoteTileSubtitles(out);
   out = linkifyRawUrls(out);
   out = sanitizeMarkdownLinks(out);
@@ -399,6 +407,113 @@ function extractBacktickBlockAfterHeading(contentMarkdown, headingText) {
   return match ? match[1].trim() : '';
 }
 
+function trimCommonIndent(lines) {
+  const nonEmptyLines = lines.filter((line) => line.trim().length > 0);
+  if (!nonEmptyLines.length) {
+    return '';
+  }
+
+  const minIndent = Math.min(
+    ...nonEmptyLines.map((line) => {
+      const match = line.match(/^(\s*)/);
+      return match ? match[1].length : 0;
+    })
+  );
+
+  return lines.map((line) => line.slice(Math.min(minIndent, line.length))).join('\n').trim();
+}
+
+function normalizeSectionKey(value) {
+  return value
+    .toLowerCase()
+    .replace(/ё/g, 'е')
+    .replace(/[^a-z0-9а-я]+/g, '');
+}
+
+function parseBacktickSections(contentMarkdown, headingPattern) {
+  const sections = [];
+  const lines = contentMarkdown.split('\n');
+  let current = null;
+
+  const flush = () => {
+    if (!current) {
+      return;
+    }
+    sections.push({
+      title: current.title,
+      bodyMarkdown: trimCommonIndent(current.lines),
+    });
+    current = null;
+  };
+
+  lines.forEach((line) => {
+    const match = line.match(headingPattern);
+    if (match) {
+      flush();
+      current = { title: match[1].trim(), lines: [] };
+      return;
+    }
+
+    if (current) {
+      current.lines.push(line);
+    }
+  });
+
+  flush();
+  return sections;
+}
+
+function parseLabeledBacktickSections(contentMarkdown) {
+  return parseBacktickSections(contentMarkdown, /^\s*-\s+`([^`]+)`\s*$/);
+}
+
+function parseNumberedBacktickSections(contentMarkdown) {
+  return parseBacktickSections(contentMarkdown, /^\s*\d+\.\s+`([^`]+)`\s*$/);
+}
+
+function findSectionBodyByAliases(sections, aliases) {
+  const aliasKeys = aliases.map((alias) => normalizeSectionKey(alias)).filter(Boolean);
+  if (!aliasKeys.length) {
+    return '';
+  }
+
+  const exactMatch = sections.find((section) => {
+    const sectionKey = normalizeSectionKey(section.title);
+    return aliasKeys.includes(sectionKey);
+  });
+  if (exactMatch) {
+    return exactMatch.bodyMarkdown;
+  }
+
+  const partialMatch = sections.find((section) => {
+    const sectionKey = normalizeSectionKey(section.title);
+    return aliasKeys.some((aliasKey) => sectionKey.includes(aliasKey) || aliasKey.includes(sectionKey));
+  });
+  if (partialMatch) {
+    return partialMatch.bodyMarkdown;
+  }
+
+  return '';
+}
+
+function mapWhyBetTileHeading(sourceHeading, index) {
+  const key = normalizeSectionKey(sourceHeading);
+  if (key.includes('боль')) {
+    return 'БОЛЬ';
+  }
+  if (key.includes('сетевойэффект')) {
+    return 'СЕТЕВОЙ ЭФФЕКТ';
+  }
+  if (key.includes('экономика')) {
+    return 'ЭКОНОМИКА';
+  }
+  if (key.includes('пилот')) {
+    return 'ПИЛОТ';
+  }
+  const fallbackByIndex = ['БОЛЬ', 'СЕТЕВОЙ ЭФФЕКТ', 'ЭКОНОМИКА', 'ПИЛОТ'];
+  return fallbackByIndex[index] || sourceHeading;
+}
+
 function buildExecutiveSummaryCustom(slide) {
   const section = document.createElement('section');
   section.id = slide.id;
@@ -415,37 +530,38 @@ function buildExecutiveSummaryCustom(slide) {
   const grid = document.createElement('div');
   grid.className = 'tiles-grid exec-grid';
 
+  const sections = parseLabeledBacktickSections(slide.contentMarkdown);
+  const whatBody =
+    findSectionBodyByAliases(sections, ['what']) ||
+    '**Salmon Space** — приватное пространство группы, где связаны повод, расход, сбор, цель, доли, обсуждение, расчет и история.';
+  const howBody =
+    findSectionBodyByAliases(sections, ['how']) ||
+    '1. Проверяем боль и качество решения задачи.\n2. Проверяем привлечение новых активированных пользователей и повторяемость.\n3. Проверяем перенос в новые графы и банковскую экономику.';
+  const whyBody =
+    findSectionBodyByAliases(sections, ['why']) ||
+    '- **Реальная боль [A]:** [75%](https://www.lendingtree.com/credit-cards/study/friends-money-report/) говорят, что деньги вредили дружбе; [32%](https://www.lendingtree.com/credit-cards/study/friends-money-report/) не получили деньги назад. Прим. Будет валидировано на PH.\n- **Сетевой эффект:** новый релевантный участник помогает другим участникам Space решить задачу; повтор в том же Space углубляет ценность, перенос в другую группу расширяет сеть.\n- **Масштаб:** SOM 4.2M [A] пользователей к 3-му году; ~ 17% цели Salmon в 25M активных пользователей [1](#appendix-q-tam--sam--som), [2](' +
+      SOM_SOURCE_URL +
+      '). Прим. Будет рассчитан Bottom Up и cross-check.';
+  const riskBody =
+    findSectionBodyByAliases(sections, ['главный риск', 'risk']) ||
+    'Если Space не доводит группу до закрытого расчета и второго повода, он останется удобным инструментом, а не сетевым продуктом.';
+  const tradeOffBody =
+    findSectionBodyByAliases(sections, ['trade-off', 'trade off', 'tradeoff']) ||
+    'Среди топ NE сегментов "друзья", "пары / партнеры", "дети в семьях" и "небольших групп коллег" я выбираю друзей: у них сильнее перенос в новые графы и сетевой эффект.';
+
   const whatTile = createCustomTile(
     'WHAT',
-    '**Salmon Space** — приватное пространство группы, где связаны повод, расход / сбор / цель, доли, обсуждение, расчет и история.',
+    whatBody,
     'exec-what'
   );
 
-  const howTile = createCustomTile(
-    'HOW',
-    '1. Проверяем боль и качество решения задачи.\n2. Проверяем привлечение новых активированных пользователей и повторяемость.\n3. Проверяем перенос в новые графы и банковскую экономику.',
-    'exec-how'
-  );
+  const howTile = createCustomTile('HOW', howBody, 'exec-how');
 
-  const whyTile = createCustomTile(
-    'WHY',
-    '- **Боль реальна [A]:** [75%](https://www.lendingtree.com/credit-cards/study/friends-money-report/) говорят, что деньги вредили дружбе; [32%](https://www.lendingtree.com/credit-cards/study/friends-money-report/) не получили деньги назад. Прим. Нужно валидировать на PH.\n- **Сетевой эффект здесь работает:** новый релевантный участник помогает другим участникам Space решить задачу; повтор в том же Space углубляет ценность, перенос в другую группу расширяет сеть.\n- **Масштаб материален:** SOM 4.2M [A] пользователей к 3-му году; это около 17% цели Salmon в 25M активных пользователей [1](#appendix-q-tam--sam--som), [2](' +
-      SOM_SOURCE_URL +
-      ').',
-    'exec-why'
-  );
+  const whyTile = createCustomTile('WHY', whyBody, 'exec-why');
 
-  const riskTile = createCustomTile(
-    'ГЛАВНЫЙ РИСК',
-    'Если Space не доводит группу до закрытого расчета и второго повода, он останется удобным инструментом, а не сетевым продуктом.',
-    'exec-risk'
-  );
+  const riskTile = createCustomTile('ГЛАВНЫЙ РИСК', riskBody, 'exec-risk');
 
-  const tradeOffTile = createCustomTile(
-    'TRADE-OFF',
-    'Среди топ NE сегментов "друзья", "пары / партнеры", "дети в семьях" и "небольших групп коллег" я выбираю друзей: у них сильнее перенос в новые графы и сетевой эффект.',
-    'exec-trade'
-  );
+  const tradeOffTile = createCustomTile('TRADE-OFF', tradeOffBody, 'exec-trade');
 
   grid.append(whatTile, howTile, whyTile, riskTile, tradeOffTile);
   shell.appendChild(grid);
@@ -485,32 +601,39 @@ function buildWhyBetCustom(slide) {
 
   const grid = document.createElement('div');
   grid.className = 'tiles-grid bet-grid';
+  const sections = parseNumberedBacktickSections(slide.contentMarkdown);
+  const tileSpecs =
+    sections.length > 0
+      ? sections.slice(0, 4).map((sectionItem, index) => ({
+          heading: mapWhyBetTileHeading(sectionItem.title, index),
+          bodyMarkdown: sectionItem.bodyMarkdown,
+        }))
+      : [
+          {
+            heading: 'БОЛЬ',
+            bodyMarkdown:
+              '- Один платит за всех, дальше начинаются чаты, напоминания, ручная математика, неловкие напоминания и переводы в разных приложениях.\n- [75%](https://www.lendingtree.com/credit-cards/study/friends-money-report/) говорят, что деньги вредили дружбе; [32%](https://www.lendingtree.com/credit-cards/study/friends-money-report/) не получили деньги назад. Прим. Будет валидировано на PH.',
+          },
+          {
+            heading: 'СЕТЕВОЙ ЭФФЕКТ',
+            bodyMarkdown:
+              '- Каждый новый участник Space приближает группу ближе к закрытому расчету или достигнутой финансовой цели.\n- Каждый новый участник может создавать новые контексты в существующем Space или создавать новые Spaces и приглашать новых пользователей.',
+          },
+          {
+            heading: 'ЭКОНОМИКА',
+            bodyMarkdown:
+              'Цепочка ценности: Space -> новый активированный пользователь -> доходное банковое действие -> вклад когорты в банковскую экономику.',
+          },
+          {
+            heading: 'ПИЛОТ',
+            bodyMarkdown:
+              '[A] В первый месяц верифицируем боль и снимаем качественные usability-сигналы с прототипом. В четвертый месяц получаем первые количественные данные.',
+          },
+        ];
 
-  const t1 = createCustomTile(
-    'БОЛЬ',
-    '- Один платит за всех, дальше начинаются чаты, напоминания, ручная математика, неловкие напоминания и переводы в разных приложениях.\n- [75%](https://www.lendingtree.com/credit-cards/study/friends-money-report/) говорят, что деньги вредили дружбе; [32%](https://www.lendingtree.com/credit-cards/study/friends-money-report/) не получили деньги назад. Нужно валидировать на PH.',
-    'bet-1'
-  );
-
-  const t2 = createCustomTile(
-    'СЕТЕВОЙ ЭФФЕКТ',
-    '* Каждый новый участник Space приближает группу ближе к закрытому расчету или достигнутой финансовой цели.\n* Каждый новый участник может создавать новые контексты в существующем Space или создавать новые Spaces и приглашать новых пользователей.',
-    'bet-2'
-  );
-
-  const t3 = createCustomTile(
-    'ЭКОНОМИКА',
-    'Цепочка ценности: Space -> новый активированный пользователь -> доходное банковое действие -> вклад когорты в банковскую экономику.',
-    'bet-3'
-  );
-
-  const t4 = createCustomTile(
-    'ПИЛОТ',
-    '[A] В первый месяц верифицируем боль и снимаем качественные usability-сигналы с прототипом. В четвертый месяц получаем первые количественные данные.',
-    'bet-4'
-  );
-
-  grid.append(t1, t2, t3, t4);
+  tileSpecs.forEach((tileSpec, index) => {
+    grid.appendChild(createCustomTile(tileSpec.heading, tileSpec.bodyMarkdown, `bet-${index + 1}`));
+  });
   shell.appendChild(grid);
   section.appendChild(shell);
   return section;
@@ -528,6 +651,34 @@ function buildAppendixDividerSlide(slide) {
   title.className = 'main-title appendix-divider-title';
   title.textContent = slide.title;
   shell.appendChild(title);
+
+  section.appendChild(shell);
+  return section;
+}
+
+function buildCoverTitleSlide(slide) {
+  const section = document.createElement('section');
+  section.id = slide.id;
+  section.dataset.backgroundColor = '#f5f5f6';
+
+  const shell = document.createElement('div');
+  shell.className = 'slide-shell cover-shell';
+
+  const title = document.createElement('h2');
+  title.className = 'main-title';
+  title.textContent = slide.title;
+  shell.appendChild(title);
+
+  const subtitleLine =
+    slide.contentMarkdown
+      .split('\n')
+      .map((line) => line.trim())
+      .find((line) => line.length > 0) || '"Spaces" Роман Бабунц';
+
+  const subtitle = document.createElement('h2');
+  subtitle.className = 'main-title cover-subtitle';
+  subtitle.textContent = subtitleLine;
+  shell.appendChild(subtitle);
 
   section.appendChild(shell);
   return section;
@@ -562,7 +713,7 @@ function buildWhatScenariosCustom(slide) {
 
   const resultText =
     extractBacktickBlockAfterHeading(slide.contentMarkdown, 'ОБРАЗ РЕЗУЛЬТАТА') ||
-    'Опыт должен быть короче и удобнее текущего ручного пути: заведение расхода -> доли -> расчет -> выплата.';
+    'Опыт должен быть короче и удобнее мультимодального ("ручного") пути: заведение расхода -> доли -> расчет -> выплата.';
 
   const grid = document.createElement('div');
   grid.className = 'tiles-grid scenarios-grid';
@@ -639,6 +790,10 @@ function buildSlideSection(slide) {
 
   if (slide.id === 'slide-2-why-the-bet') {
     return buildWhyBetCustom(slide);
+  }
+
+  if (slide.id === 'slide-0-testovoe-zadanie-salmon') {
+    return buildCoverTitleSlide(slide);
   }
 
   if (slide.id === 'slide-5-what') {
@@ -735,12 +890,6 @@ function applyColumnWidthsFromSource(sourceTable, targetTable) {
     return (cell.getBoundingClientRect().width / tableWidth) * 100;
   });
 
-  if (widths.length >= 3) {
-    const equalWidth = (widths[1] + widths[2]) / 2;
-    widths[1] = equalWidth;
-    widths[2] = equalWidth;
-  }
-
   const setColgroup = (table) => {
     const oldColgroup = table.querySelector('colgroup');
     if (oldColgroup) {
@@ -808,8 +957,14 @@ async function renderDeck() {
     });
 
     await deck.initialize();
+    const syncWhyNotTables = () => {
+      requestAnimationFrame(syncWhyNotAlternativesTableColumns);
+    };
     // Keep the second table on slide 3 aligned with the first one.
-    requestAnimationFrame(syncWhyNotAlternativesTableColumns);
+    syncWhyNotTables();
+    deck.on('ready', syncWhyNotTables);
+    deck.on('slidechanged', syncWhyNotTables);
+    window.addEventListener('resize', syncWhyNotTables);
     loading.classList.add('hidden');
   } catch (err) {
     loading.textContent = `Ошибка сборки слайдов: ${err.message}`;

@@ -1,0 +1,239 @@
+:root {
+  --bg-base: #ffffff;
+  --surface: #ffffff;
+  --surface-soft: #f8f6f3;
+  --stroke: #e3dfd9;
+  --text-primary: #141414;
+  --text-secondary: #555555;
+  --brand-coral: #f45b5f;
+  --tile-font-size: 0.94rem;
+  --tile-radius: 18px;
+}
+
+html,
+body {
+  height: 100%;
+  background:
+    radial-gradient(1000px 420px at -80px -120px, rgba(244, 91, 95, 0.1), transparent 64%),
+    radial-gradient(780px 280px at 120% 120%, rgba(244, 91, 95, 0.09), transparent 68%),
+    var(--bg-base);
+}
+
+.reveal {
+  font-family: "Manrope", "Segoe UI", sans-serif;
+  color: var(--text-primary);
+  text-rendering: geometricPrecision;
+}
+
+.reveal .slides {
+  text-align: left;
+}
+
+.reveal .slides section {
+  padding: 0;
+}
+
+.slide-shell {
+  width: min(96vw, 1260px);
+  margin: 0 auto;
+  display: grid;
+  gap: 0.44rem;
+}
+
+.main-title {
+  margin: 0 0 0.56rem;
+  color: var(--brand-coral);
+  font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+  font-size: clamp(2.4rem, 4.2vw, 3.32rem);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.tile {
+  background: var(--surface);
+  border: 1px solid var(--stroke);
+  border-radius: var(--tile-radius);
+  padding: 0.62rem 0.72rem;
+  box-shadow: 0 8px 20px -18px rgba(20, 20, 20, 0.35);
+}
+
+.tile-accent {
+  background: var(--surface-soft);
+}
+
+.tile-label {
+  margin: 0 0 0.34rem;
+  color: var(--brand-coral);
+  font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+  font-size: 1.58rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+
+.tile-body {
+  margin: 0;
+  font-size: var(--tile-font-size);
+  color: var(--text-secondary);
+  line-height: 1.22;
+}
+
+.tile-body strong {
+  color: var(--text-primary);
+  font-weight: 800;
+}
+
+.tile-accent .tile-body {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.tile a {
+  color: var(--brand-coral);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.08em;
+}
+
+.grid {
+  display: grid;
+  gap: 0.44rem;
+}
+
+.top-grid {
+  grid-template-columns: 1.06fr 2.94fr;
+}
+
+.bottom-grid {
+  grid-template-columns: 1.82fr 1.58fr;
+}
+
+.tile-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.3rem;
+}
+
+.tile-list li {
+  display: grid;
+  grid-template-columns: 0.72rem 1fr;
+  column-gap: 0.44rem;
+  align-items: start;
+}
+
+.bullet {
+  width: 0.46rem;
+  height: 0.46rem;
+  border: 2px solid var(--brand-coral);
+  border-radius: 999px;
+  margin-top: 0.26rem;
+}
+
+.meta-flag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.2em;
+  height: 1.2em;
+  border: 1px solid #d0b8b5;
+  border-radius: 999px;
+  color: #9f6e6b;
+  background: #f9f4f3;
+  font-size: 0.76em;
+  font-weight: 700;
+  line-height: 1;
+  vertical-align: 0.05em;
+}
+
+.risk-tile {
+  display: grid;
+  grid-template-columns: 1.2fr 6.6fr;
+  gap: 0.56rem;
+  align-items: center;
+}
+
+.risk-tile .tile-label {
+  margin-top: 0.1rem;
+  margin-bottom: 0;
+}
+
+.risk-text {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  text-align: center;
+}
+
+.reveal .slides section.present .tile {
+  animation: tile-in 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.reveal .slides section.present .tile:nth-of-type(2) {
+  animation-delay: 70ms;
+}
+
+.reveal .slides section.present .tile:nth-of-type(3) {
+  animation-delay: 130ms;
+}
+
+.reveal .slides section.present .tile:nth-of-type(4) {
+  animation-delay: 190ms;
+}
+
+@keyframes tile-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 1200px) {
+  .slide-shell {
+    width: min(98vw, 1160px);
+    gap: 0.34rem;
+  }
+
+  .top-grid,
+  .bottom-grid {
+    gap: 0.34rem;
+  }
+
+  .tile {
+    padding: 0.5rem 0.56rem;
+  }
+}
+
+@media (max-width: 980px) {
+  .main-title {
+    font-size: clamp(2rem, 6.6vw, 2.6rem);
+  }
+
+  .top-grid,
+  .bottom-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .risk-tile {
+    grid-template-columns: 1fr;
+    gap: 0.16rem;
+  }
+
+  .tile-label {
+    margin-bottom: 0.22rem;
+    font-size: 1.35rem;
+  }
+
+  .tile-body {
+    font-size: 0.98rem;
+  }
+}

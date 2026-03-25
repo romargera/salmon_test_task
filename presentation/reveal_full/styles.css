@@ -62,8 +62,8 @@ body {
 .exec-grid {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   grid-template-areas:
-    "what how"
     "why why"
+    "what how"
     "risk trade";
 }
 
@@ -222,6 +222,15 @@ body {
   text-decoration-thickness: 1px;
   text-underline-offset: 0.1em;
   font-weight: 700;
+}
+
+.markdown-body .note-muted {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.markdown-body .note-muted em {
+  font-style: italic;
 }
 
 .markdown-body h3,
@@ -418,6 +427,17 @@ body {
   margin: 0;
   text-align: center;
   font-size: clamp(2.6rem, 6vw, 4rem);
+}
+
+.cover-shell {
+  min-height: min(78vh, 640px);
+  align-content: center;
+  justify-items: center;
+  text-align: center;
+}
+
+.cover-subtitle {
+  margin-top: 0.1rem;
 }
 
 .why-not-columns {
