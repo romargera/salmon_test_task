@@ -562,7 +562,7 @@ function buildExecutiveSummaryCustom(slide) {
   const sections = parseLabeledBacktickSections(slide.contentMarkdown);
   const whatBody =
     findSectionBodyByAliases(sections, ['what']) ||
-    '**Salmon Space** — приватное пространство группы, где связаны повод, расход, сбор, цель, доли, обсуждение, расчет и история.';
+    '**Salmon Space** — приватное пространство группы, где связаны повод, затраты, сбор, цель, доли, обсуждение, расчет и история.';
   const howBody =
     findSectionBodyByAliases(sections, ['how']) ||
     '1. Проверяем боль и качество решения задачи.\n2. Проверяем привлечение новых активированных пользователей и повторяемость.\n3. Проверяем перенос в новые графы и банковскую экономику.';
@@ -774,7 +774,7 @@ function buildWhatScenariosCustom(slide) {
 
   const resultText =
     extractBacktickBlockAfterHeading(slide.contentMarkdown, 'ОБРАЗ РЕЗУЛЬТАТА') ||
-    'Опыт должен быть короче и удобнее мультимодального ("ручного") пути: заведение расхода -> доли -> расчет -> выплата.';
+    'Опыт должен быть короче и удобнее мультимодального ("ручного") пути: заведение затрат -> доли -> расчет -> выплата.';
 
   const grid = document.createElement('div');
   grid.className = 'tiles-grid scenarios-grid';
