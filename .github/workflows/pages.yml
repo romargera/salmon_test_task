@@ -27,6 +27,7 @@ jobs:
           mkdir -p _site
           cp -R presentation _site/
           cp slides_draft_final.md _site/
+          cp speaker_notes.md _site/
           cp image.png _site/
           cp theory_nfx.md _site/
           cp vision_ideas.md _site/
