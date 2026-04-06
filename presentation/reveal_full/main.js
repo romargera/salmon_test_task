@@ -1,4 +1,4 @@
-/* global Reveal, marked */
+/* global Reveal, RevealNotes, marked */
 
 const SOM_SOURCE_URL =
   'https://docs.google.com/spreadsheets/d/1jzzUfvo3hHp4h_i9hOXBEJrKNEJ5Zv2G/edit?gid=1918265608#gid=1918265608&range=A2';
@@ -59,6 +59,19 @@ function getRepoBasePath() {
 
 const REPO_BASE_PATH = getRepoBasePath();
 
+function isSpeakerNotesReceiver() {
+  if (typeof window === 'undefined' || !window.location) {
+    return false;
+  }
+
+  const params = new URLSearchParams(window.location.search || '');
+  if (params.has('receiver')) {
+    return true;
+  }
+
+  return /(?:\?|&)receiver(?:=|&|$)/i.test(window.location.search || '');
+}
+
 function toRepoRootPath(relativeOrAbsolutePath) {
   return `${REPO_BASE_PATH}${relativeOrAbsolutePath.replace(/^\/+/, '')}`;
 }
@@ -118,6 +131,7 @@ function parseSlideBlock(rawBlock, index) {
 
   return {
     id: slideId,
+    rawTitle: title,
     title: cleanDisplayTitle(title),
     accent,
     contentMarkdown: body,
@@ -458,6 +472,41 @@ function normalizeSectionKey(value) {
     .toLowerCase()
     .replace(/ё/g, 'е')
     .replace(/[^a-z0-9а-я]+/g, '');
+}
+
+function normalizeConfusableKey(value) {
+  const base = normalizeSectionKey(value || '');
+  const confusableMap = {
+    а: 'a',
+    е: 'e',
+    о: 'o',
+    р: 'p',
+    с: 'c',
+    у: 'y',
+    х: 'x',
+    к: 'k',
+    м: 'm',
+    т: 't',
+    в: 'b',
+    н: 'h',
+    a: 'a',
+    e: 'e',
+    o: 'o',
+    p: 'p',
+    c: 'c',
+    y: 'y',
+    x: 'x',
+    k: 'k',
+    m: 'm',
+    t: 't',
+    b: 'b',
+    h: 'h',
+  };
+
+  return base
+    .split('')
+    .map((char) => confusableMap[char] || char)
+    .join('');
 }
 
 function parseBacktickSections(contentMarkdown, headingPattern) {
@@ -929,9 +978,73 @@ async function loadMarkdownSource() {
     '/slides_draft_final.md',
   ];
 
+  // On localhost/cloud preview we prefer live .md files so edits appear immediately.
+  if (!isFileProtocol()) {
+    const liveSource = await loadTextFromSources(sources);
+    if (liveSource) {
+      return liveSource;
+    }
+  }
+
+  const embeddedSource = decodeBase64Utf8(window.SLIDES_SOURCE_BASE64 || '');
+  if (embeddedSource) {
+    return embeddedSource;
+  }
+
+  const fallbackSource = await loadTextFromSources(sources);
+  if (fallbackSource) {
+    return fallbackSource;
+  }
+
+  throw new Error(
+    'Не удалось загрузить slides_draft_final.md. Запустите scripts/start_presentation.sh или откройте presentation/reveal_full/index.html.'
+  );
+}
+
+async function loadSpeakerNotesSource() {
+  const sources = [
+    '../../speaker_notes.md',
+    `${REPO_BASE_PATH}speaker_notes.md`,
+    '/speaker_notes.md',
+  ];
+
+  // Speaker notes must refresh from file while running via local server.
+  if (!isFileProtocol()) {
+    const liveNotes = await loadTextFromSources(sources);
+    if (liveNotes) {
+      return liveNotes;
+    }
+  }
+
+  const embeddedNotes = decodeBase64Utf8(window.SPEAKER_NOTES_SOURCE_BASE64 || '');
+  if (embeddedNotes) {
+    return embeddedNotes;
+  }
+
+  const fallbackNotes = await loadTextFromSources(sources);
+  if (fallbackNotes) {
+    return fallbackNotes;
+  }
+
+  return '';
+}
+
+function isFileProtocol() {
+  return typeof window !== 'undefined' &&
+    window.location &&
+    window.location.protocol === 'file:';
+}
+
+function withCacheBust(sourcePath) {
+  const separator = sourcePath.includes('?') ? '&' : '?';
+  return `${sourcePath}${separator}v=${Date.now()}`;
+}
+
+async function loadTextFromSources(sources) {
   for (const sourcePath of sources) {
     try {
-      const response = await fetch(sourcePath);
+      const requestUrl = withCacheBust(sourcePath);
+      const response = await fetch(requestUrl, { cache: 'no-store' });
       if (!response.ok) {
         continue;
       }
@@ -941,7 +1054,21 @@ async function loadMarkdownSource() {
     }
   }
 
-  throw new Error('Не удалось загрузить slides_draft_final.md');
+  return '';
+}
+
+function decodeBase64Utf8(input) {
+  if (!input || typeof input !== 'string') {
+    return '';
+  }
+
+  try {
+    const binary = atob(input);
+    const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+    return new TextDecoder('utf-8').decode(bytes);
+  } catch (err) {
+    return '';
+  }
 }
 
 function splitSlides(markdown) {
@@ -949,6 +1076,73 @@ function splitSlides(markdown) {
     .split(/\n-{3,}\n/g)
     .map((chunk) => chunk.trim())
     .filter(Boolean);
+}
+
+function parseSpeakerNotes(markdown) {
+  const notesMap = new Map();
+  if (!markdown || !markdown.trim()) {
+    return notesMap;
+  }
+
+  const noteBlocks = splitSlides(markdown);
+  noteBlocks.forEach((block) => {
+    const headingMatch = block.match(/^##\s+(.+)$/m);
+    if (!headingMatch) {
+      return;
+    }
+
+    const rawKey = headingMatch[1].trim();
+    const normalizedKey = normalizeSectionKey(rawKey);
+    const noteBody = block.replace(/^##\s+.+$/m, '').trim();
+
+    if (!normalizedKey || !noteBody) {
+      return;
+    }
+
+    notesMap.set(normalizedKey, noteBody);
+  });
+
+  return notesMap;
+}
+
+function resolveSpeakerNote(notesMap, slide) {
+  if (!notesMap || !notesMap.size) {
+    return '';
+  }
+
+  const candidateKeys = [slide.rawTitle, slide.title, slide.id]
+    .map((value) => normalizeSectionKey(value || ''))
+    .filter(Boolean);
+
+  for (const key of candidateKeys) {
+    if (notesMap.has(key)) {
+      return notesMap.get(key);
+    }
+  }
+
+  const candidateConfusableKeys = candidateKeys
+    .map((key) => normalizeConfusableKey(key))
+    .filter(Boolean);
+
+  for (const [noteKey, noteValue] of notesMap.entries()) {
+    const normalizedNoteKey = normalizeConfusableKey(noteKey);
+    if (candidateConfusableKeys.includes(normalizedNoteKey)) {
+      return noteValue;
+    }
+  }
+
+  return '';
+}
+
+function attachSpeakerNote(section, noteMarkdown) {
+  if (!section || !noteMarkdown) {
+    return;
+  }
+
+  const notesNode = document.createElement('aside');
+  notesNode.className = 'notes';
+  notesNode.innerHTML = marked.parse(noteMarkdown);
+  section.appendChild(notesNode);
 }
 
 function applyColumnWidthsFromSource(sourceTable, targetTable) {
@@ -1015,17 +1209,25 @@ async function renderDeck() {
 
   try {
     const sourceMarkdown = await loadMarkdownSource();
+    const speakerNotesSource = await loadSpeakerNotesSource();
+    const speakerNotesMap = parseSpeakerNotes(speakerNotesSource);
     const blocks = splitSlides(sourceMarkdown);
     const parsedSlides = blocks
       .map((block, idx) => parseSlideBlock(block, idx))
       .filter(Boolean);
 
     parsedSlides.forEach((slide) => {
-      slidesRoot.appendChild(buildSlideSection(slide));
+      const section = buildSlideSection(slide);
+      const noteMarkdown = resolveSpeakerNote(speakerNotesMap, slide);
+      attachSpeakerNote(section, noteMarkdown);
+      slidesRoot.appendChild(section);
     });
 
-    const isNarrowScreen = window.matchMedia('(max-width: 980px)').matches;
+    // Reveal speaker notes use narrow preview iframes. Force desktop slide geometry there.
+    const isNarrowScreen = !isSpeakerNotesReceiver() &&
+      window.matchMedia('(max-width: 980px)').matches;
     const deck = new Reveal({
+      plugins: [RevealNotes],
       hash: true,
       controls: true,
       progress: true,
